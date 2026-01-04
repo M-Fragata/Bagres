@@ -1,7 +1,17 @@
 import mongoose from "mongoose";
 
-const BagreSchema = new mongoose.Schema({
-    
+type ScheduleProps = {
+    date: string;
+    hour: string;
+    name: string;
+}
+
+const BagreSchema = new mongoose.Schema<ScheduleProps>({
+    date: { type: String, required: true },
+    hour: { type: String, required: true },
+    name: { type: String, required: true },
+}, {
+    timestamps: true,
 });
 
-export const Bagres = mongoose.model("Bagres", BagreSchema);
+export const Bagre = mongoose.model<ScheduleProps>("Bagres", BagreSchema);

@@ -1,21 +1,17 @@
 import { ButtonIcon } from "./ButtonIcon"
+import type { ScheduleProps } from "../pages/schedule.tsx"
 
-type SchedulesProps = {
-    id: string,
-    date: string,
-    time: string,
-    name: string,
-}
 
 type SchedulePeriodProps = {
     icon: string,
     title: string,
     period: string,
     cancelIcon: string,
-    schedules: SchedulesProps[]
+    selectedDate: string,
+    schedules: ScheduleProps[]
 }
 
-export function SchedulePeriod({ icon, title, period, cancelIcon, schedules }: SchedulePeriodProps) {
+export function SchedulePeriod({ icon, title, period, cancelIcon, selectedDate, schedules }: SchedulePeriodProps) {
     return (
         <div className="border border-white rounded-2xl p-2 text-white min-h-20">
             <div className="flex justify-between border border-transparent border-b-white mb-2 pb-2">
@@ -29,57 +25,60 @@ export function SchedulePeriod({ icon, title, period, cancelIcon, schedules }: S
             </div>
 
             {schedules.map((schedule) => {
-                const hourNumber = Number(schedule.time.replace(":", ""))
+                const hourNumber = Number(schedule.hour.replace(":", ""))
 
-                if (period === "08 - 11h" && hourNumber >= 800 && hourNumber <= 1100) {
-                    return (
-                        <div key={schedule.id} className="flex justify-between pl-3 pr-3">
-                            <div>
-                                <p className="flex gap-2">
-                                    <strong>
-                                        {schedule.time}
-                                    </strong>
-                                    {schedule.name}
-                                </p>
+                if (schedule.date === selectedDate) {
+                    if (period === "08 - 11h" && hourNumber >= 800 && hourNumber <= 1100) {
+                        return (
+                            <div key={schedule._id} className="flex justify-between pl-3 pr-3">
+                                <div>
+                                    <p className="flex gap-2">
+                                        <strong>
+                                            {schedule.hour}
+                                        </strong>
+                                        {schedule.name}
+                                    </p>
+                                </div>
+                                <div>
+                                    <ButtonIcon icon={cancelIcon} />
+                                </div>
                             </div>
-                            <div>
-                                <ButtonIcon icon={cancelIcon} />
+                        )
+                    } else if (period === "14 - 17h" && hourNumber >= 1400 && hourNumber <= 1700) {
+                        return (
+                            <div key={schedule._id} className="flex justify-between pl-3 pr-3">
+                                <div>
+                                    <p className="flex gap-2">
+                                        <strong>
+                                            {schedule.hour}
+                                        </strong>
+                                        {schedule.name}
+                                    </p>
+                                </div>
+                                <div>
+                                    <ButtonIcon icon={cancelIcon} />
+                                </div>
                             </div>
-                        </div>
-                    )
-                } else if (period === "14 - 17h" && hourNumber >= 1400 && hourNumber <= 1700) {
-                    return (
-                        <div key={schedule.id} className="flex justify-between pl-3 pr-3">
-                            <div>
-                                <p className="flex gap-2">
-                                    <strong>
-                                        {schedule.time}
-                                    </strong>
-                                    {schedule.name}
-                                </p>
+                        )
+                    } else if (period === "18 - 20h" && hourNumber >= 1745 && hourNumber <= 2000) {
+                        return (
+                            <div key={schedule._id} className="flex justify-between pl-3 pr-3">
+                                <div>
+                                    <p className="flex gap-2">
+                                        <strong>
+                                            {schedule.hour}
+                                        </strong>
+                                        {schedule.name}
+                                    </p>
+                                </div>
+                                <div>
+                                    <ButtonIcon icon={cancelIcon} />
+                                </div>
                             </div>
-                            <div>
-                                <ButtonIcon icon={cancelIcon} />
-                            </div>
-                        </div>
-                    )
-                } else if (period === "18 - 20h" && hourNumber >= 1745 && hourNumber <= 2000) {
-                    return (
-                        <div key={schedule.id} className="flex justify-between pl-3 pr-3">
-                            <div>
-                                <p className="flex gap-2">
-                                    <strong>
-                                        {schedule.time}
-                                    </strong>
-                                    {schedule.name}
-                                </p>
-                            </div>
-                            <div>
-                                <ButtonIcon icon={cancelIcon} />
-                            </div>
-                        </div>
-                    )
+                        )
+                    }
                 }
+
                 return null
             })}
 

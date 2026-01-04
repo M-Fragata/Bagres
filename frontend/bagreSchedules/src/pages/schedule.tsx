@@ -1,10 +1,9 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import { Input } from "../components/Input"
 import { Button } from "../components/Button"
 import { SchedulePeriod } from "../components/SchedulePeriod"
 import { ScheduleHours } from "../components/ScheduleHours"
-import { dataBase } from "../utils/dataBase"
 
 import morning from "../assets/morning.png"
 import afternoon from "../assets/afternoon.png"
@@ -12,32 +11,85 @@ import night from "../assets/night.png"
 import trash from "../assets/trash.svg"
 import logo from "../assets/logo.png"
 
+export type ScheduleProps = {
+    _id: string
+    date: string
+    hour: string
+    name: string
+}
+
+const API_URL = "http://localhost:3333/schedules"
+
 export function Schedule() {
+
+    const [schedule, setSchedule] = useState<ScheduleProps[]>([])
 
     const [name, setName] = useState("")
     const [selectedHour, setSelectedHour] = useState<string | null>(null)
     const [date, setDate] = useState(new Date().toISOString().split("T")[0])
 
-    function handleSubmit(event: React.FormEvent) {
+    async function handleSubmit(event: React.FormEvent) {
+
         event.preventDefault()
+
         if (!selectedHour) {
             alert("Por favor, selecione um horário para o treino.")
             return
         }
-        
-        dataBase.push({
-            id: String(dataBase.length + 1),
-            date: date,
-            time: selectedHour,
-            name: name
-        })
 
-        SchedulePeriod
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    date: date,
+                    hour: selectedHour,
+                    name: name
+                })
+            })
 
-        console.log(dataBase)
+            if (!response.ok) {
+                throw new Error("Erro ao salvar agendamento")
+            }
+
+            const data = await response.json()
+            setSelectedHour(null)
+            setName("")
+            getSchedules()
+
+            console.log("Sucesso: ", data)
+            alert("Agendado com sucesso")
+        } catch (error) {
+            console.error(error)
+            alert("Falha ao conectar com servidor")
+        }
 
         alert(`Treino agendado para ${date} às ${selectedHour} para o atleta ${name}.`)
     }
+
+    async function getSchedules() {
+        try {
+            const response = await fetch(`${API_URL}?date=${date}`, {
+                method: "GET",
+                headers: { "Content-type": "application/json" }
+            })
+
+            if (response.ok) {
+                const data: ScheduleProps[] = await response.json()
+
+                setSchedule(data)
+                console.log(schedule)
+            }
+        } catch (error) {
+            console.error("Erro ao buscar agendamentos: ", error)
+        }
+    }
+
+    useEffect(() => {
+        getSchedules()
+    }, [date])
 
     return (
         <main className="bg-blue-950 min-h-screen w-full flex flex-col items-center justify-center p-3 min-[1100px]:flex-row gap-10">
@@ -120,21 +172,24 @@ export function Schedule() {
                         icon={morning}
                         title="Manhã"
                         period="08 - 11h"
-                        schedules={dataBase}
+                        selectedDate={date}
+                        schedules={schedule}
                         cancelIcon={trash}
                     />
                     < SchedulePeriod
                         icon={afternoon}
                         title="Tarde"
                         period="14 - 17h"
-                        schedules={dataBase}
+                        selectedDate={date}
+                        schedules={schedule}
                         cancelIcon={trash}
                     />
                     < SchedulePeriod
                         icon={night}
                         title="Noite"
                         period="18 - 20h"
-                        schedules={dataBase}
+                        selectedDate={date}
+                        schedules={schedule}
                         cancelIcon={trash}
                     />
                 </aside>
