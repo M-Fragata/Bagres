@@ -55,18 +55,17 @@ export function Schedule() {
             }
 
             const data = await response.json()
+
             setSelectedHour(null)
             setName("")
             getSchedules()
 
-            console.log("Sucesso: ", data)
             alert("Agendado com sucesso")
         } catch (error) {
-            console.error(error)
+            console.log(error)
             alert("Falha ao conectar com servidor")
         }
 
-        alert(`Treino agendado para ${date} às ${selectedHour} para o atleta ${name}.`)
     }
 
     async function getSchedules() {
@@ -80,7 +79,6 @@ export function Schedule() {
                 const data: ScheduleProps[] = await response.json()
 
                 setSchedule(data)
-                console.log(schedule)
             }
         } catch (error) {
             console.error("Erro ao buscar agendamentos: ", error)
@@ -147,6 +145,7 @@ export function Schedule() {
 
                 <Input
                     required
+                    value={name}
                     legend="Atleta"
                     placeholder="Nome do atleta"
                     onChange={(event) => setName(event.target.value)}
