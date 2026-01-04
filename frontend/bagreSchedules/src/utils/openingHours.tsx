@@ -1,5 +1,5 @@
 
-export const Hours = [
+export const Hours: string[] = [
     //manhã
     "08:00",
     "08:45",

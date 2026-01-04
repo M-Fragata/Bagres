@@ -1,0 +1,19 @@
+# Dependências
+node_modules/
+
+# Compilação (TypeScript para JS)
+dist/
+out/
+
+# Variáveis de ambiente (Segurança!)
+.env
+.env.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sistema (macOS/Windows)
+.DS_Store
+Thumbs.db

@@ -1,14 +1,47 @@
+import { useState } from "react"
+
 import { Input } from "../components/Input"
 import { Button } from "../components/Button"
+import { SchedulePeriod } from "../components/SchedulePeriod"
+import { ScheduleHours } from "../components/ScheduleHours"
+import { dataBase } from "../utils/dataBase"
 
 import morning from "../assets/morning.png"
 import afternoon from "../assets/afternoon.png"
 import night from "../assets/night.png"
+import trash from "../assets/trash.svg"
+import logo from "../assets/logo.png"
 
 export function Schedule() {
+
+    const [name, setName] = useState("")
+    const [selectedHour, setSelectedHour] = useState<string | null>(null)
+    const [date, setDate] = useState(new Date().toISOString().split("T")[0])
+
+    function handleSubmit(event: React.FormEvent) {
+        event.preventDefault()
+        if (!selectedHour) {
+            alert("Por favor, selecione um horário para o treino.")
+            return
+        }
+        
+        dataBase.push({
+            id: String(dataBase.length + 1),
+            date: date,
+            time: selectedHour,
+            name: name
+        })
+
+        SchedulePeriod
+
+        console.log(dataBase)
+
+        alert(`Treino agendado para ${date} às ${selectedHour} para o atleta ${name}.`)
+    }
+
     return (
-        <main className="bg-blue-950 min-h-screen w-full flex flex-col items-center justify-center p-2 min-[1100px]:flex-row md:gap-10">
-            <form
+        <main className="bg-blue-950 min-h-screen w-full flex flex-col items-center justify-center p-3 min-[1100px]:flex-row gap-10">
+            <form onSubmit={handleSubmit}
                 className="border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)] rounded-2xl p-6 text-white flex flex-col gap-3 "
             >
                 <div>
@@ -20,132 +53,90 @@ export function Schedule() {
                     </div>
                 </div>
 
-                <Input legend="Informe a data:" type="date" />
+                <Input
+                    legend="Informe a data:"
+                    type="date"
+                    value={date}
+                    onChange={(event) => setDate(event.target.value)}
+                />
 
                 <h2>Horários</h2>
                 <div className="flex gap-2">
                     <div className="flex flex-col gap-1">
-                        <p className="text-center">Manhã</p>
-                        <div className="border border-white rounded-2xl px-2 py-1">
-                            08:00
-                        </div>
-                        <div className="border border-white rounded-2xl px-2 py-1">
-                            09:00
-                        </div>
+                        < ScheduleHours
+                            title="Manhã"
+                            initial={800}
+                            final={1100}
+                            onSelect={setSelectedHour}
+                            selected={selectedHour}
+                        />
                     </div>
 
-                     <div className="flex flex-col gap-1">
-                        <p className="text-center">Tarde</p>
-                        <div className="border border-white rounded-2xl px-2 py-1">
-                            08:00
-                        </div>
-                        <div className="border border-white rounded-2xl px-2 py-1">
-                            09:00
-                        </div>
-                    </div>
-                    
                     <div className="flex flex-col gap-1">
-                        <p className="text-center">Noite</p>
-                        <div className="border border-white rounded-2xl px-2 py-1">
-                            08:00
-                        </div>
-                        <div className="border border-white rounded-2xl px-2 py-1">
-                            09:00
-                        </div>
+                        < ScheduleHours
+                            title="Tarde"
+                            initial={1400}
+                            final={1700}
+                            onSelect={setSelectedHour}
+                            selected={selectedHour}
+                        />
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                        < ScheduleHours
+                            title="Noite"
+                            initial={1745}
+                            final={2000}
+                            onSelect={setSelectedHour}
+                            selected={selectedHour}
+                        />
                     </div>
                 </div>
 
                 <Input
+                    required
                     legend="Atleta"
                     placeholder="Nome do atleta"
+                    onChange={(event) => setName(event.target.value)}
                 />
                 <Button
                     title="Agendar Treino"
                 />
             </form>
             <section>
-                <aside className="flex">
+                <aside className="flex items-center gap-4 mb-4">
                     <div>
-                        imagem
+                        <img className="w-20 h-20"
+                            src={logo}
+                            alt="icone dos bagres" />
                     </div>
-                    <div>
+                    <div className="text-white">
                         <h2>Agendamentos</h2>
                         <p>Vizualize os agendamentos de acordo com a data selecionada</p>
                     </div>
                 </aside>
-                <aside className="flex flex-col gap-2 text-white">
-                    <div className="border border-white rounded-2xl p-2">
-                        <div className="flex justify-between border border-transparent border-b-white mb-2 pb-2">
-                            <div className="flex">
-                                <img src={morning} alt="nascer do sol" />
-                                <h3 className="ml-2">
-                                    Manhã
-                                </h3>
-                            </div>
-                            <p>08 - 11h</p>
-                        </div>
-                        <div className="flex justify-between pl-3 pr-3">
-                            <div>
-                                <p className="flex gap-2">
-                                    <strong>
-                                        08:00
-                                    </strong>
-                                    Fragata
-                                </p>
-                            </div>
-                            <div>
-                                X
-                            </div>
-                        </div>
-                    </div>
-                    <div className="border border-white rounded-2xl p-2">
-                        <div className="flex justify-between border border-transparent border-b-white mb-2 pb-2">
-                            <div className="flex">
-                                <img src={afternoon} alt="pôr do sol" />
-                                <h3 className="ml-2">
-                                    Tarde
-                                </h3>
-                            </div>
-                            <p>14 - 17h</p>
-                        </div>
-                        <div className="flex justify-between pl-3 pr-3">
-                            <div>
-                                <p className="flex gap-2">
-                                    <strong>
-                                        08:00
-                                    </strong>
-                                    Fragata
-                                </p>
-                            </div>
-                            <div>
-                                X
-                            </div>
-                        </div>
-                    </div>
-                    <div className="border border-white rounded-2xl p-2">
-                        <div className="flex justify-between border border-transparent border-b-white mb-2 pb-2">
-                            <div className="flex">
-                                <img src={night} alt="Luar" />
-                                <h3 className="ml-2">
-                                    Noite
-                                </h3>
-                            </div>
-                            <p>18 - 21h</p>
-                        </div>
-                        <div className="flex justify-between pl-3 pr-3">
-                            <div>
-                                <p className="flex gap-2">
-                                    <strong>
-                                        08:00
-                                    </strong>
-                                    Fragata
-                                </p>
-                            </div>
-                            <div>
-                                X
-                            </div>
-                        </div>
-                    </div>
+                <aside className="flex flex-col gap-2 mt-4 w-full min-[1100px]:mt-0">
+                    < SchedulePeriod
+                        icon={morning}
+                        title="Manhã"
+                        period="08 - 11h"
+                        schedules={dataBase}
+                        cancelIcon={trash}
+                    />
+                    < SchedulePeriod
+                        icon={afternoon}
+                        title="Tarde"
+                        period="14 - 17h"
+                        schedules={dataBase}
+                        cancelIcon={trash}
+                    />
+                    < SchedulePeriod
+                        icon={night}
+                        title="Noite"
+                        period="18 - 20h"
+                        schedules={dataBase}
+                        cancelIcon={trash}
+                    />
                 </aside>
             </section>
         </main>
