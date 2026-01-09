@@ -81,7 +81,7 @@ export function SignupPage() {
                     <Button title="Entrar" />
                 </div>
                 <a className="text-white p-4"
-                    href="/login">
+                    href="/">
                     <strong>Já possui conta?</strong>
                 </a>
             </form>
