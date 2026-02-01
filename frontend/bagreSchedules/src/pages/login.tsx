@@ -1,17 +1,52 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 import { Input } from "../components/Input"
 import { Button } from "../components/Button"
 
 
+const API_URL = "http://localhost:3333/login"
+
 export function LoginPage() {
 
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
+    const navigate = useNavigate();
 
-    function handleSubmit(event: React.FormEvent) {
+
+    async function handleSubmit(event: React.FormEvent) {
         event.preventDefault()
         console.log({ mail, password })
+
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: mail,
+                    password: password
+                })
+            })
+
+            const data = await response.json()
+
+            if (response.ok) {
+                localStorage.setItem("@MeuApp:user", JSON.stringify(data.atleta));
+
+                localStorage.setItem("@MeuApp:token", data.token);
+                
+                alert(`Bem-vindo, ${data.atleta.name}!`);
+
+                window.location.assign("/");
+            } else {
+                alert(data.error || "E-mail ou senha incorretos.");
+            }
+        } catch (error) {
+            console.error(error)
+            alert("Falha ao conectar com o servidor.")
+        }
     }
 
     return (

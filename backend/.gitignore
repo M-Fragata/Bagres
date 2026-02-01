@@ -1,19 +1,5 @@
-# Dependências
-node_modules/
-
-# Compilação (TypeScript para JS)
-dist/
-out/
-
-# Variáveis de ambiente (Segurança!)
+node_modules
+# Keep environment variables out of version control
 .env
-.env.local
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Sistema (macOS/Windows)
-.DS_Store
-Thumbs.db
+*.db
+/src/generated/prisma

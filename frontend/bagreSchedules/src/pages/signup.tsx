@@ -1,8 +1,10 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 import { Input } from "../components/Input"
 import { Button } from "../components/Button"
 
+const API_URL = "http://localhost:3333/atletas"
 
 export function SignupPage() {
 
@@ -12,9 +14,40 @@ export function SignupPage() {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
 
-    function handleSubmit(event: React.FormEvent) {
+    const navigate = useNavigate();
+
+    async function handleSubmit(event: React.FormEvent) {
+
         event.preventDefault()
         console.log({ mail, firstName, lastName, password, confirmPassword })
+
+        try {
+
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: mail,
+                    password: password
+                })
+            })
+
+            const data = await response.json()
+
+            if (response.ok) {
+                alert("Cadastro realizado com sucesso!")
+                navigate("/")
+            } else {
+                alert(data.error || "Erro ao cadastrar atleta.")
+            }
+        } catch (error) {
+            console.error(error)
+            alert("Falha ao conectar com o servidor.")
+        }
     }
 
     return (

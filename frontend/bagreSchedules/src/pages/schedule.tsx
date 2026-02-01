@@ -12,10 +12,10 @@ import trash from "../assets/trash.svg"
 import logo from "../assets/logo.png"
 
 export type ScheduleProps = {
-    _id: string
+    id: string
     date: string
     hour: string
-    name: string
+    atleta: string
 }
 
 const API_URL = "http://localhost:3333/schedules"
@@ -26,7 +26,8 @@ export function Schedule() {
 
     const [name, setName] = useState("")
     const [selectedHour, setSelectedHour] = useState<string | null>(null)
-    const [date, setDate] = useState(new Date().toISOString().split("T")[0])
+    const [date, setDate] = useState(new Date().toISOString().split("T")[0]) // Formato YYYY-MM-DD
+
 
     async function handleSubmit(event: React.FormEvent) {
 
@@ -44,9 +45,9 @@ export function Schedule() {
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify({
+                    name: name,
                     date: date,
-                    hour: selectedHour,
-                    name: name
+                    hour: selectedHour
                 })
             })
 
@@ -69,6 +70,7 @@ export function Schedule() {
     }
 
     async function getSchedules() {
+
         try {
             const response = await fetch(`${API_URL}?date=${date}`, {
                 method: "GET",
@@ -82,6 +84,32 @@ export function Schedule() {
             }
         } catch (error) {
             console.error("Erro ao buscar agendamentos: ", error)
+        }
+    }
+
+    async function handleDeleteSchedule(id: string) {
+        try {
+
+            const confirmed = window.confirm("Tem certeza que deseja deletar este agendamento?")
+
+            if(!confirmed){ 
+                return
+            }
+
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: "DELETE",
+                headers: { "Content-type": "application/json" }
+            })
+
+            if (response.ok) {
+                getSchedules()
+            } 
+            else {
+                throw new Error("Erro ao deletar agendamento")
+            }
+
+        } catch (error) {
+            console.error("Erro ao deletar agendamento: ", error)
         }
     }
 
@@ -174,6 +202,7 @@ export function Schedule() {
                         selectedDate={date}
                         schedules={schedule}
                         cancelIcon={trash}
+                        onDelete={handleDeleteSchedule}
                     />
                     < SchedulePeriod
                         icon={afternoon}
@@ -182,6 +211,7 @@ export function Schedule() {
                         selectedDate={date}
                         schedules={schedule}
                         cancelIcon={trash}
+                        onDelete={handleDeleteSchedule}
                     />
                     < SchedulePeriod
                         icon={night}
@@ -190,6 +220,7 @@ export function Schedule() {
                         selectedDate={date}
                         schedules={schedule}
                         cancelIcon={trash}
+                        onDelete={handleDeleteSchedule}
                     />
                 </aside>
             </section>

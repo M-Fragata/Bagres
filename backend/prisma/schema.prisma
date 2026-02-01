@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url = "file:../src/database/dev.db"
+}
+
+model Schedules {
+  id           String   @id @default(uuid())
+  atleta       String
+  date         String
+  hour         String   // Você pode receber "14:30" como String do front
+  
+  // Campos automáticos do Backend
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("Schedules") // Define o nome da tabela no banco como "Schedules"
+}
+
+model Atletas {
+  id        String   @id @default(uuid())
+  firstName     String
+  lastName   String
+  email     String   @unique
+  password  String   // Aqui salvaremos a senha (criptografada depois!)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("Atletas")
+}

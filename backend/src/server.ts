@@ -1,19 +1,17 @@
-import express from "express";
+import express from "express"
 import cors from "cors"
-import { bagreRoutes } from "./routes/scheduleRoutes.js"
-import { DataBase } from "./mongoDB/DataBase.js";
+import { routes } from "./routes/index.js"
 
 const app = express()
 
-app.use(express.json());
-app.use(cors())
+app.use(cors({
+  origin: "*", // Durante o desenvolvimento, o "*" libera qualquer frontend (localhost:5173, etc)
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}))
 
-//Utilizando as rotas
-app.use("/", bagreRoutes)
+app.use(express.json())
 
-const PORT = process.env.PORT || 3333;
+app.use(routes)
 
-app.listen(PORT, () => {
-    console.log("Servidor rodando na porta " + PORT)
-    DataBase();
-})
+app.listen(3333, () => console.log("Server is running on port 3333"))
