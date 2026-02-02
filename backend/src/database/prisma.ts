@@ -1,13 +1,4 @@
-import { PrismaClient } from "@prisma/client"
-import path from "node:path"
+import { PrismaClient } from '@prisma/client'
 
-// Caminho absoluto para o banco de dados
-const dbPath = path.resolve(process.cwd(), "src", "database", "dev.db")
-
-export const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: `file:${dbPath}`
-    }
-  }
-})
+// O Prisma vai ler automaticamente a variável DATABASE_URL do seu .env
+export const prisma = new PrismaClient()

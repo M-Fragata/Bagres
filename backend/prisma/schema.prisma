@@ -5,9 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// No prisma/schema.prisma
 datasource db {
-  provider = "sqlite"
-  url = "file:../src/database/dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Schedules {
