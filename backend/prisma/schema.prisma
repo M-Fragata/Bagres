@@ -1,36 +1,29 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
-// No prisma/schema.prisma
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Schedules {
-  id           String   @id @default(uuid())
-  atleta       String
-  date         String
-  hour         String   // Você pode receber "14:30" como String do front
-  
-  // Campos automáticos do Backend
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        String   @id @default(uuid())
+  atleta    String
+  date      String
+  hour      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@map("Schedules") // Define o nome da tabela no banco como "Schedules"
+  @@map("Schedules")
 }
 
 model Atletas {
   id        String   @id @default(uuid())
-  firstName     String
-  lastName   String
+  firstName String
+  lastName  String
   email     String   @unique
-  password  String   // Aqui salvaremos a senha (criptografada depois!)
-  
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
