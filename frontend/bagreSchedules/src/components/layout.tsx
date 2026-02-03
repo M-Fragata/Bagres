@@ -1,7 +1,22 @@
 import { Outlet } from "react-router-dom"
+import { useState, useEffect } from "react"
 
 export function LayoutPage() {
 
+    const [name, setName] = useState("")
+
+    function getNameLogged() {
+
+        const FirstName = localStorage.getItem("@bagres:userName") || ""
+
+        const capitalized = FirstName.charAt(0).toUpperCase() + FirstName.slice(1).toLowerCase()
+
+        setName(capitalized)
+    }
+
+    useEffect(() => {
+        getNameLogged()
+    }, [])
 
     function handleLogout() {
 
@@ -11,9 +26,10 @@ export function LayoutPage() {
             return
         }
 
-        localStorage.removeItem("@MeuApp:user");
-        localStorage.removeItem("@MeuApp:token");
-        window.location.assign("/");
+        localStorage.removeItem("@bagres:token");
+        localStorage.removeItem("@bagres:user");
+        localStorage.removeItem("@bagres:userName");
+        window.location.href = "/";
     }
 
     return (
@@ -21,7 +37,7 @@ export function LayoutPage() {
             <header className="text-white bg-blue-950">
                 <div className="bg-red-950 p-2 shadow mb-2">
                     <p>Olá,</p>
-                    <strong> Matheus!</strong>
+                    <strong> {name}!</strong>
                     <button className="cursor-pointer" onClick={handleLogout}>Logout</button>
                 </div>
                 <Outlet />

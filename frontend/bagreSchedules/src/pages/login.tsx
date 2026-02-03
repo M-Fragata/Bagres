@@ -1,18 +1,15 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom";
 
 import { Input } from "../components/Input"
 import { Button } from "../components/Button"
 
-
 const API_URL = "http://localhost:3333/login"
+const token = localStorage.getItem("@bagres:token");
 
 export function LoginPage() {
 
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
-    const navigate = useNavigate();
-
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault()
@@ -23,6 +20,7 @@ export function LoginPage() {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
+                    "authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     email: mail,
@@ -33,13 +31,15 @@ export function LoginPage() {
             const data = await response.json()
 
             if (response.ok) {
-                localStorage.setItem("@MeuApp:user", JSON.stringify(data.atleta));
+                localStorage.setItem("@bagres:token", data.token);
 
-                localStorage.setItem("@MeuApp:token", data.token);
-                
+                // Salve o objeto inteiro do atleta (que tem a role: "user")
+                localStorage.setItem("@bagres:user", JSON.stringify(data.atleta));
+
                 alert(`Bem-vindo, ${data.atleta.name}!`);
 
-                window.location.assign("/");
+                // Use o reload para forçar o App.tsx a ler o localStorage de novo
+                window.location.href = "/";
             } else {
                 alert(data.error || "E-mail ou senha incorretos.");
             }

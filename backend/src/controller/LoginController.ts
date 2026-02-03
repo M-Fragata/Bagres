@@ -3,8 +3,9 @@ import { prisma } from '../database/prisma.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-export class SessionController {
-  async store(req: Request, res: Response) {
+export class LoginController {
+
+  async create(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
 
@@ -27,7 +28,7 @@ export class SessionController {
       // 3. Gerar o Token JWT
       // O primeiro parâmetro é o que queremos "esconder" no token (o ID do atleta)
       // O segundo é uma frase secreta que só o seu servidor conhece
-      const token = jwt.sign({ id: atleta.id }, "SUA_CHAVE_SECRETA_MUITO_FORTE", {
+      const token = jwt.sign({ id: atleta.id }, process.env.JWT_SECRET! as string, {
         expiresIn: '7d', // O usuário fica logado por 7 dias
       });
 
@@ -46,4 +47,33 @@ export class SessionController {
       return res.status(500).json({ error: "Erro ao realizar login." });
     }
   }
+
+  async index(req: Request, res: Response) {
+
+    try {
+
+      const id = (req as any).userId
+
+      const atletaData = await prisma.atletas.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        } // <--- Por enquanto, buscar sempre o atleta de ID 1
+      });
+
+      if (!atletaData) {
+        return res.status(404).json({ error: "Atleta não encontrado." });
+      }
+
+      return res.json(atletaData)
+
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao buscar atleta." });
+    }
+
+  }
+
 }

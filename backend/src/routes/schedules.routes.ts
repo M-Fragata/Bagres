@@ -1,12 +1,13 @@
 import { Router} from "express"
 import { SchedulesController } from "../controller/scheduleController.js"
+import { authenticateToken } from "../middlewares/authentication.js"
 
 export const SchedulesRoutes = Router()
 
 const schedulesController = new SchedulesController()
 
 
-SchedulesRoutes.get("/", schedulesController.index)
-SchedulesRoutes.post("/", schedulesController.create)
-SchedulesRoutes.put("/:id", schedulesController.update)
-SchedulesRoutes.delete("/:id", schedulesController.delete)
+SchedulesRoutes.get("/", authenticateToken, schedulesController.index)
+SchedulesRoutes.post("/", authenticateToken, schedulesController.create)
+SchedulesRoutes.put("/:id", authenticateToken, schedulesController.update)
+SchedulesRoutes.delete("/:id", authenticateToken, schedulesController.delete)

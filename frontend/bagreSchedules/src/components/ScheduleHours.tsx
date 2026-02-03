@@ -1,4 +1,3 @@
-import { useState } from "react"
 
 import { HourButton } from "../components/HourButton"
 import { Hours } from "../utils/openingHours"

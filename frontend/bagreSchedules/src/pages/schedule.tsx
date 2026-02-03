@@ -19,6 +19,8 @@ export type ScheduleProps = {
 }
 
 const API_URL = "http://localhost:3333/schedules"
+const API_LOGIN = "http://localhost:3333/login"
+    const token = localStorage.getItem("@bagres:token");
 
 export function Schedule() {
 
@@ -43,6 +45,7 @@ export function Schedule() {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
+                    "authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     name: name,
@@ -58,7 +61,6 @@ export function Schedule() {
             const data = await response.json()
 
             setSelectedHour(null)
-            setName("")
             getSchedules()
 
             alert("Agendado com sucesso")
@@ -74,7 +76,10 @@ export function Schedule() {
         try {
             const response = await fetch(`${API_URL}?date=${date}`, {
                 method: "GET",
-                headers: { "Content-type": "application/json" }
+                headers: {
+                    "Content-type": "application/json",
+                    "authorization": `Bearer ${token}`
+                }
             })
 
             if (response.ok) {
@@ -87,23 +92,53 @@ export function Schedule() {
         }
     }
 
+    async function getNameLogged() {
+
+        try {
+            const response = await fetch(`${API_LOGIN}`, {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json",
+                    "authorization": `Bearer ${token}`
+                }
+            })
+
+            if (response.ok) {
+                const data = await response.json()
+                const { firstName, lastName } = data
+                setName(`${firstName.toUpperCase()} ${lastName.toUpperCase()}`)
+
+                localStorage.setItem("@bagres:userName", `${firstName}`)
+
+            }
+        } catch (error) {
+
+            console.error("Erro ao buscar nome do usuário logado: ", error)
+
+        }
+
+    }
+
     async function handleDeleteSchedule(id: string) {
         try {
 
             const confirmed = window.confirm("Tem certeza que deseja deletar este agendamento?")
 
-            if(!confirmed){ 
+            if (!confirmed) {
                 return
             }
 
             const response = await fetch(`${API_URL}/${id}`, {
                 method: "DELETE",
-                headers: { "Content-type": "application/json" }
+                headers: {
+                    "Content-type": "application/json",
+                    "authorization": `Bearer ${token}`
+                }
             })
 
             if (response.ok) {
                 getSchedules()
-            } 
+            }
             else {
                 throw new Error("Erro ao deletar agendamento")
             }
@@ -113,6 +148,12 @@ export function Schedule() {
         }
     }
 
+    // Busca o nome apenas UMA vez quando a tela carrega
+    useEffect(() => {
+        getNameLogged()
+    }, [])
+
+    // Busca agendamentos sempre que a data mudar
     useEffect(() => {
         getSchedules()
     }, [date])
@@ -172,6 +213,7 @@ export function Schedule() {
                 </div>
 
                 <Input
+                    disabled
                     required
                     value={name}
                     legend="Atleta"

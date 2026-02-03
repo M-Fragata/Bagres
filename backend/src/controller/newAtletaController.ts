@@ -3,7 +3,7 @@ import { prisma } from '../database/prisma.js'; // ajuste o caminho conforme seu
 import bcrypt from 'bcryptjs';
 
 export class AtletaController {
-  async store(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     try {
       const { firstName, lastName, email, password } = req.body;
 

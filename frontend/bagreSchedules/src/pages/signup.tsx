@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "../components/Input"
 import { Button } from "../components/Button"
 
-const API_URL = "http://localhost:3333/atletas"
+const API_URL = "http://localhost:3333/session"
 
 export function SignupPage() {
 
