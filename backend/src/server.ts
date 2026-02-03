@@ -7,9 +7,11 @@ const app = express()
 const PORT = process.env.PORT || 3333 
 
 app.use(cors({
-  origin: "*", // Durante o desenvolvimento, o "*" libera qualquer frontend (localhost:5173, etc)
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  // Adicione aqui a URL do seu site no Render
+  origin: ["https://bagres-7mcv.onrender.com", "http://localhost:5173"], 
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Adicionei OPTIONS aqui
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true // Caso você use cookies futuramente
 }))
 
 app.use(express.json())
