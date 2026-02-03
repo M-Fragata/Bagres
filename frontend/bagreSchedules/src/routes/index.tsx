@@ -10,7 +10,7 @@ export function Routes() {
     // 1. Criamos um estado para o usuário. 
     // Começamos tentando ler o que está salvo no navegador.
 
-    const [user, setUser] = useState(() => {
+    const [user] = useState(() => {
         // Agora usamos a mesma chave: @bagres:user
         const storageUser = localStorage.getItem("@bagres:user");
 

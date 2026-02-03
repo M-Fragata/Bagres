@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react"
 import { Input } from "../components/Input"
-import { Button } from "../components/Button"
 import { RoutesURL } from "../utils/routesURL"
 import { ScheduleHourSearch } from "../components/scheduleHourSearch"
 
-import search from "../assets/react.svg"
 import cancel from "../assets/trash.svg"
 
 const token = localStorage.getItem("@bagres:token");

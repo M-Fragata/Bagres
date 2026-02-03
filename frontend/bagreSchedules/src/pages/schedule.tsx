@@ -57,7 +57,7 @@ export function Schedule() {
                 throw new Error("Erro ao salvar agendamento")
             }
 
-            const data = await response.json()
+            await response.json()
 
             setSelectedHour(null)
             getSchedules()
