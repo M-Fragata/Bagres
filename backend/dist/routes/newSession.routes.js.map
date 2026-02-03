@@ -1,0 +1,1 @@
+{"version":3,"file":"newSession.routes.js","sourceRoot":"","sources":["../../src/routes/newSession.routes.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAC,MAAM,SAAS,CAAA;AAC/B,OAAO,EAAE,gBAAgB,EAAE,MAAM,sCAAsC,CAAA;AAEvE,MAAM,CAAC,MAAM,aAAa,GAAG,MAAM,EAAE,CAAA;AAErC,MAAM,iBAAiB,GAAG,IAAI,gBAAgB,EAAE,CAAA;AAEhD,aAAa,CAAC,IAAI,CAAC,GAAG,EAAE,iBAAiB,CAAC,MAAM,CAAC,CAAA"}
