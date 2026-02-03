@@ -1,2 +1,16 @@
 @import "tailwindcss";
 
+@theme {
+  /* Altera o md padrão de 768px para 650px (ou o valor que preferir) */
+  --breakpoint-md: 620px;
+    --breakpoint-mobile: 480px;
+}
+
+/* Aproveitando que você está no CSS, vamos garantir que o body 
+   não tenha scrolls estranhos por padrão */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Isso impede o scroll na página toda */
+  height: 100%;
+}

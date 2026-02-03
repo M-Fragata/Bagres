@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
+import { RoutesURL } from "../utils/routesURL"
 
 import { Input } from "../components/Input"
 import { Button } from "../components/Button"
 
-const API_URL = "http://localhost:3333/session"
 
 export function SignupPage() {
 
@@ -23,7 +23,7 @@ export function SignupPage() {
 
         try {
 
-            const response = await fetch(API_URL, {
+            const response = await fetch(RoutesURL.API_SESSION, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",

@@ -2,8 +2,8 @@ import { useState } from "react"
 
 import { Input } from "../components/Input"
 import { Button } from "../components/Button"
+import { RoutesURL } from "../utils/routesURL"
 
-const API_URL = "http://localhost:3333/login"
 const token = localStorage.getItem("@bagres:token");
 
 export function LoginPage() {
@@ -13,10 +13,9 @@ export function LoginPage() {
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault()
-        console.log({ mail, password })
 
         try {
-            const response = await fetch(API_URL, {
+            const response = await fetch(RoutesURL.API_LOGIN, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",

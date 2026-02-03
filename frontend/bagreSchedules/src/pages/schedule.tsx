@@ -4,6 +4,7 @@ import { Input } from "../components/Input"
 import { Button } from "../components/Button"
 import { SchedulePeriod } from "../components/SchedulePeriod"
 import { ScheduleHours } from "../components/ScheduleHours"
+import { RoutesURL } from "../utils/routesURL"
 
 import morning from "../assets/morning.png"
 import afternoon from "../assets/afternoon.png"
@@ -18,9 +19,7 @@ export type ScheduleProps = {
     atleta: string
 }
 
-const API_URL = "http://localhost:3333/schedules"
-const API_LOGIN = "http://localhost:3333/login"
-    const token = localStorage.getItem("@bagres:token");
+const token = localStorage.getItem("@bagres:token");
 
 export function Schedule() {
 
@@ -41,7 +40,7 @@ export function Schedule() {
         }
 
         try {
-            const response = await fetch(API_URL, {
+            const response = await fetch(RoutesURL.API_SCHEDULES, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -74,7 +73,7 @@ export function Schedule() {
     async function getSchedules() {
 
         try {
-            const response = await fetch(`${API_URL}?date=${date}`, {
+            const response = await fetch(`${RoutesURL.API_SCHEDULES}?date=${date}`, {
                 method: "GET",
                 headers: {
                     "Content-type": "application/json",
@@ -95,7 +94,7 @@ export function Schedule() {
     async function getNameLogged() {
 
         try {
-            const response = await fetch(`${API_LOGIN}`, {
+            const response = await fetch(`${RoutesURL.API_LOGIN}`, {
                 method: "GET",
                 headers: {
                     "Content-type": "application/json",
@@ -128,7 +127,7 @@ export function Schedule() {
                 return
             }
 
-            const response = await fetch(`${API_URL}/${id}`, {
+            const response = await fetch(`${RoutesURL.API_SCHEDULES}/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-type": "application/json",
@@ -159,7 +158,7 @@ export function Schedule() {
     }, [date])
 
     return (
-        <main className="bg-blue-950 min-h-screen w-full flex flex-col items-center justify-center p-3 min-[1100px]:flex-row gap-10">
+        <main className="bg-blue-950 w-full min-h-full flex flex-col items-center p-3 gap-10 min-[1100px]:flex-row min-[1100px]:justify-center">
             <form onSubmit={handleSubmit}
                 className="border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)] rounded-2xl p-6 text-white flex flex-col gap-3 "
             >
