@@ -3,22 +3,16 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 export function LayoutPage() {
-
-    const [name, setName] = useState("")
     const navigate = useNavigate()
 
-    function getNameLogged() {
-
-        const FirstName = localStorage.getItem("@bagres:userName") || ""
-
-        const capitalized = FirstName.charAt(0).toUpperCase() + FirstName.slice(1).toLowerCase()
-
-        setName(capitalized)
-    }
-
-    useEffect(() => {
-        getNameLogged()
-    }, [])
+    const [name] = useState(() => {
+        // Esta função roda no momento em que o componente é montado
+        const firstName = localStorage.getItem("@bagres:userName") || "";
+        if (firstName) {
+            return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+        }
+        return "";
+    });
 
     function handleLogout() {
 
