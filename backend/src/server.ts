@@ -7,18 +7,11 @@ const app = express()
 const PORT = process.env.PORT || 3333 
 
 // 1. Configura as regras
-const corsOptions = {
-  origin: "https://bagres-7mcv.onrender.com", 
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-};
-
-// 2. Aplica o CORS em todas as requisições
-app.use(cors(corsOptions));
-
-// 3. Responde o "Preflight" (OPTIONS) de forma ultra rápida
-app.options("(.*)", cors(corsOptions));
+app.use(cors({
+  origin: "*", // Libera geral para testarmos e garantir que o login passe
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}))
 
 app.use(express.json())
 
