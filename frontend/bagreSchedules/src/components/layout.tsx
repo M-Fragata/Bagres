@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 export function LayoutPage() {
     const navigate = useNavigate()
 
-    const [name] = useState(() => {
+    const [name, setName] = useState(() => {
         // Esta função roda no momento em que o componente é montado
         const firstName = localStorage.getItem("@bagres:userName") || "";
         if (firstName) {
@@ -13,6 +13,25 @@ export function LayoutPage() {
         }
         return "";
     });
+
+    useEffect(() => {
+        // Função para atualizar o nome
+        const updateName = () => {
+            const firstName = localStorage.getItem("@bagres:userName") || "";
+            if (firstName) {
+                setName(firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase());
+            }
+        };
+
+        // Escuta mudanças no localStorage vindas de outras abas/páginas
+        window.addEventListener('storage', updateName);
+
+        // Como o 'storage' às vezes não pega mudanças na mesma aba,
+        // garantimos a atualização quando o componente focar ou montar
+        updateName();
+
+        return () => window.removeEventListener('storage', updateName);
+    }, []);
 
     function handleLogout() {
 
