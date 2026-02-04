@@ -18,7 +18,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // 3. Responde o "Preflight" (OPTIONS) de forma ultra rápida
-app.options("*", cors(corsOptions));
+app.options("(.*)", cors(corsOptions));
 
 app.use(express.json())
 
