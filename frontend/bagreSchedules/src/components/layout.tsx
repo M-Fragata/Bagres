@@ -11,6 +11,7 @@ export function LayoutPage() {
 
     const [navbar, setNavbar] = useState(false)
     const [name, setName] = useState("")
+    const [admin, setAdmin] = useState(false)
 
     const getFormattedName = (() => {
         // Esta função roda no momento em que o componente é montado
@@ -27,8 +28,10 @@ export function LayoutPage() {
         const updateName = () => {
             setName(getFormattedName());
         };
-
         updateName();
+
+        const user = JSON.parse(localStorage.getItem("@bagres:user") || "{}")
+        setAdmin(user.role === "admin")
 
         window.addEventListener('storage', updateName);
         return () => window.removeEventListener('storage', updateName);
@@ -70,28 +73,34 @@ export function LayoutPage() {
 
                         <div className={`absolute right-0 top-16 m-auto pb-5 bg-bagre-primaria w-full z-50 transition-all duration-300 ease-in-out ${navbar ? "max-h-[300px] opacity-100 visible" : "max-h-0 opacity-0 invisible"}`} >
                             <div className="flex flex-col gap-3">
+                                
                                 <button className="cursor-pointer"><a href="https://m-fragata.github.io/BST-projeto/frontend/src/" target="_blank">Início</a> </button>
+
                                 <button className="cursor-pointer" onClick={() => {
                                     navigate("/")
                                     setNavbar(false)
                                 }}
                                 >Novo Agendamento</button>
+
                                 <button className="cursor-pointer" onClick={() => {
                                     navigate("/search")
                                     setNavbar(false)
                                 }}>Meus agendamentos</button>
+
                                 <button className="cursor-pointer" onClick={handleLogout}>Sair</button>
+
+                                {admin && (<button className="cursor-pointer" onClick={() => navigate("/admin")}>Administrador</button>)}
                             </div>
                         </div>
                     </div>
                 </div>
 
             </header>
-            <main className="flex-1 flex flex-col ">
+            <main className="flex-1 flex flex-col bg-bagre-terciaria">
                 <Outlet />
             </main>
-            <footer className="text-white bg-bagre-primaria flex justify-center p-3 shrink-0">
-                <strong>C 2025 Bagres Swim Team</strong>. All rights reserved. Since 2023
+            <footer className="text-white bg-bagre-primaria flex justify-center p-3 shrink-0 text-[11px] mobile:text-sm">
+                <p><strong>© 2026 Bagres Swim Team.</strong> All rights reserved. Since 2023.</p>
             </footer>
         </div>
     )

@@ -13,7 +13,7 @@ type SchedulePeriodProps = {
 
 export function SchedulePeriod({ icon, title, period, selectedDate, schedules }: SchedulePeriodProps) {
     return (
-        <div className="border border-white rounded-2xl p-2 text-white min-h-20">
+        <div className={`border border-white rounded-2xl p-2 text-white min-h-20 overflow-y-auto`}>
             <div className="flex justify-between border border-transparent border-b-white mb-2 pb-2">
                 <div className="flex">
                     <img src={icon} alt={title} />

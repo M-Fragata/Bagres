@@ -30,7 +30,7 @@ export class LoginController {
                     id: atleta.id,
                     name: `${atleta.firstName} ${atleta.lastName}`,
                     email: atleta.email,
-                    role: "user" // <--- Adicione isso aqui manualmente por enquanto!
+                    role: atleta.role,
                 },
                 token,
             });
@@ -49,7 +49,8 @@ export class LoginController {
                     firstName: true,
                     lastName: true,
                     email: true,
-                } // <--- Por enquanto, buscar sempre o atleta de ID 1
+                    role: true,
+                }
             });
             if (!atletaData) {
                 return res.status(404).json({ error: "Atleta não encontrado." });

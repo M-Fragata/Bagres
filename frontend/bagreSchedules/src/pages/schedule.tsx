@@ -161,7 +161,7 @@ export function Schedule() {
         <main className="bg-bagre-terciaria w-full min-h-full flex flex-col items-center p-3 gap-10 min-[1100px]:flex-row min-[1100px]:justify-center">
             <form onSubmit={handleSubmit}
                 style={{backgroundImage: `url(${priscila})`}}
-                className="border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)] rounded-2xl p-12 text-white flex flex-col gap-3 bg-cover bg-center mobile:bg-left"
+                className="border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)] rounded-2xl p-12 text-white flex flex-col gap-3 bg-cover bg-center mobile:bg-left min-[1100px]:h-[730px]"
             >
                 <div>
                     <h1>Agende seu treinamento</h1>
@@ -224,19 +224,19 @@ export function Schedule() {
                     title="Agendar Treino"
                 />
             </form>
-            <section className="bg-bagre-primaria rounded-2xl p-6">
+            <section className="bg-bagre-primaria rounded-2xl p-12 min-[1100px]:h-[730px] flex flex-col h-full">
                 <aside className="flex items-center gap-4 mb-4 ">
                     <div>
-                        <img className="w-20 h-20"
+                        <img className="w-10 h-12"
                             src={logo}
                             alt="icone dos bagres" />
                     </div>
                     <div className="text-white">
-                        <h2>Agendamentos</h2>
+                        <h2 className="text-bagre-secundaria">Agendamentos</h2>
                         <p>Vizualize os agendamentos de acordo com a data selecionada</p>
                     </div>
                 </aside>
-                <aside className="flex flex-col gap-2 mt-4 w-full min-[1100px]:mt-0">
+                <aside className="flex flex-1 flex-col gap-2 mt-4 w-full min-[1100px]:mt-0">
                     < SchedulePeriod
                         icon={morning}
                         title="Manhã"
