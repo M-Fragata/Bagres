@@ -9,8 +9,8 @@ import { RoutesURL } from "../utils/routesURL"
 import morning from "../assets/morning.png"
 import afternoon from "../assets/afternoon.png"
 import night from "../assets/night.png"
-import trash from "../assets/trash.svg"
 import logo from "../assets/logo.png"
+import priscila from "../assets/priscila.jpeg"
 
 export type ScheduleProps = {
     id: string
@@ -158,9 +158,10 @@ export function Schedule() {
     }, [date])
 
     return (
-        <main className="bg-blue-950 w-full min-h-full flex flex-col items-center p-3 gap-10 min-[1100px]:flex-row min-[1100px]:justify-center">
+        <main className="bg-bagre-terciaria w-full min-h-full flex flex-col items-center p-3 gap-10 min-[1100px]:flex-row min-[1100px]:justify-center">
             <form onSubmit={handleSubmit}
-                className="border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)] rounded-2xl p-6 text-white flex flex-col gap-3 "
+                style={{backgroundImage: `url(${priscila})`}}
+                className="border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)] rounded-2xl p-12 text-white flex flex-col gap-3 bg-cover bg-center mobile:bg-left"
             >
                 <div>
                     <h1>Agende seu treinamento</h1>
@@ -223,8 +224,8 @@ export function Schedule() {
                     title="Agendar Treino"
                 />
             </form>
-            <section>
-                <aside className="flex items-center gap-4 mb-4">
+            <section className="bg-bagre-primaria rounded-2xl p-6">
+                <aside className="flex items-center gap-4 mb-4 ">
                     <div>
                         <img className="w-20 h-20"
                             src={logo}
@@ -242,7 +243,6 @@ export function Schedule() {
                         period="08 - 11h"
                         selectedDate={date}
                         schedules={schedule}
-                        cancelIcon={trash}
                         onDelete={handleDeleteSchedule}
                     />
                     < SchedulePeriod
@@ -251,7 +251,6 @@ export function Schedule() {
                         period="14 - 17h"
                         selectedDate={date}
                         schedules={schedule}
-                        cancelIcon={trash}
                         onDelete={handleDeleteSchedule}
                     />
                     < SchedulePeriod
@@ -260,7 +259,6 @@ export function Schedule() {
                         period="18 - 20h"
                         selectedDate={date}
                         schedules={schedule}
-                        cancelIcon={trash}
                         onDelete={handleDeleteSchedule}
                     />
                 </aside>

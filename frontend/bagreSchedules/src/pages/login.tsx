@@ -35,6 +35,9 @@ export function LoginPage() {
                 // Salve o objeto inteiro do atleta (que tem a role: "user")
                 localStorage.setItem("@bagres:user", JSON.stringify(data.atleta));
 
+                // Armazenando o nome do usuário
+                localStorage.setItem("@bagres:userName", data.atleta.name.split(" ")[0]);
+
                 alert(`Bem-vindo, ${data.atleta.name}!`);
 
                 // Use o reload para forçar o App.tsx a ler o localStorage de novo
@@ -70,12 +73,16 @@ export function LoginPage() {
                 </h1>
                 <div className="w-full px-10 flex flex-col gap-4">
                     <Input
+                        legendClassName="text-white"
+                        inputClassName="text-white"
                         required
                         legend="E-mail:"
                         type="email"
                         onChange={(event) => setMail(event.target.value)}
                     />
                     <Input
+                        legendClassName="text-white"
+                        inputClassName="text-white"
                         required
                         legend="Senha:"
                         type="password"

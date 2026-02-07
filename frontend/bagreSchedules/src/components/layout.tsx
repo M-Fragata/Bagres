@@ -1,11 +1,18 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { ButtonIcon } from "./ButtonIcon"
+
+import bagres_logo from "../assets/logo_bagres.png"
+import menu from "../assets/menu.png"
 
 export function LayoutPage() {
     const navigate = useNavigate()
+    const location = useLocation()
 
-    const [name, setName] = useState(() => {
+    const [navbar, setNavbar] = useState(false)
+    const [name, setName] = useState("")
+
+    const getFormattedName = (() => {
         // Esta função roda no momento em que o componente é montado
         const firstName = localStorage.getItem("@bagres:userName") || "";
         if (firstName) {
@@ -15,23 +22,18 @@ export function LayoutPage() {
     });
 
     useEffect(() => {
-        // Função para atualizar o nome
+        // Atualiza o nome sempre que a rota mudar (location)
+        // ou quando houver o evento de storage (outras abas)
         const updateName = () => {
-            const firstName = localStorage.getItem("@bagres:userName") || "";
-            if (firstName) {
-                setName(firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase());
-            }
+            setName(getFormattedName());
         };
 
-        // Escuta mudanças no localStorage vindas de outras abas/páginas
-        window.addEventListener('storage', updateName);
-
-        // Como o 'storage' às vezes não pega mudanças na mesma aba,
-        // garantimos a atualização quando o componente focar ou montar
         updateName();
 
+        window.addEventListener('storage', updateName);
         return () => window.removeEventListener('storage', updateName);
-    }, []);
+    }, [location])
+
 
     function handleLogout() {
 
@@ -48,24 +50,47 @@ export function LayoutPage() {
     }
 
     return (
-        <div className="flex flex-col h-screen w-screen">
-            <header className="text-white bg-red-950 w-full flex justify-center">
-                <div className="bg-red-950 p-2 shadow mb-2 w-full max-w-325 flex justify-between items-center">
-                    <div className="flex">
-                        <span>Olá, <strong>{name}!</strong></span>
+        <div className="flex flex-col h-screen w-full overflow-x-hidden">
+            <header className="text-white bg-bagre-primaria w-full flex justify-center h-17 shrink-0 sticky top-0 z-[60]">
+                <div className=" shadow pl-7 pr-7 w-full h-full max-w-325 flex justify-between items-center">
+                    <div>
+                        <img src={bagres_logo} className="w-5.5" />
                     </div>
-                    <div className="flex gap-3">
-                        <button className="cursor-pointer" onClick={() => navigate("/")}>Agendar</button>
-                        <button className="cursor-pointer" onClick={() => navigate("/search")}>Meus agendamentos</button>
-                        <button className="cursor-pointer" onClick={handleLogout}>Sair</button>
+                    <div className="flex gap-6 items-center">
+                        <div className="flex">
+                            <span>Olá, <strong>{name}!</strong></span>
+                        </div>
+
+                        <div>
+                            <ButtonIcon
+                                icon={menu}
+                                onClick={() => setNavbar(!navbar)}
+                            />
+                        </div>
+
+                        <div className={`absolute right-0 top-16 m-auto pb-5 bg-bagre-primaria w-full z-50 transition-all duration-300 ease-in-out ${navbar ? "max-h-[300px] opacity-100 visible" : "max-h-0 opacity-0 invisible"}`} >
+                            <div className="flex flex-col gap-3">
+                                <button className="cursor-pointer"><a href="https://m-fragata.github.io/BST-projeto/frontend/src/" target="_blank">Início</a> </button>
+                                <button className="cursor-pointer" onClick={() => {
+                                    navigate("/")
+                                    setNavbar(false)
+                                }}
+                                >Novo Agendamento</button>
+                                <button className="cursor-pointer" onClick={() => {
+                                    navigate("/search")
+                                    setNavbar(false)
+                                }}>Meus agendamentos</button>
+                                <button className="cursor-pointer" onClick={handleLogout}>Sair</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
             </header>
-            <div className="flex-1 overflow-y-auto">
+            <main className="flex-1 flex flex-col ">
                 <Outlet />
-            </div>
-            <footer className="text-white bg-blue-950 flex justify-center p-3">
+            </main>
+            <footer className="text-white bg-bagre-primaria flex justify-center p-3 shrink-0">
                 <strong>C 2025 Bagres Swim Team</strong>. All rights reserved. Since 2023
             </footer>
         </div>

@@ -16,7 +16,7 @@ export type ScheduleProps = {
 
 export function SearchSchedule() {
 
-    const [date, setDate] = useState(new Date().toISOString().split("T")[0])
+    const [date, setDate] = useState("")
     const [name, setName] = useState("")
     const [schedules, setSchedules] = useState<ScheduleProps[]>([])
 
@@ -77,26 +77,25 @@ export function SearchSchedule() {
     }, [date, name])
 
     return (
-        <main className="bg-blue-950 w-full h-full flex flex-col items-center justify-center p-3 gap-10">
-            <div className="flex w-full max-w-200 p-4">
-                <div className="flex flex-col-reverse md:flex-row w-full">
+        <main className="bg-bagre-terciaria w-full h-full flex flex-col items-center justify-center p-3 gap-10">
+            <div className="flex w-full max-w-200 p-4 border border-bagre-terciaria rounded-2xl shadow-2xl">
+                <div className="flex flex-col-reverse md:flex-row w-full ">
                     <div className="flex-2">
                         <Input
-                            legend="Procurar"
+                            inputClassName="text-black"
+                            placeholder="Buscar"
                             onChange={(event) => setName(event.target.value)}
                         />
                     </div>
                     <div className="flex-1 mx-2">
                         <Input
-                            value={date}
-                            legend="date"
                             type="date"
                             onChange={(event) => setDate(event.target.value)} />
                     </div>
                 </div>
             </div>
 
-            <div className="w-full max-w-200 h-[70dvh] p-4 overflow-y-auto bg-white rounded-lg">
+            <div className="w-full max-w-200 h-[70dvh] p-4 overflow-y-auto bg-bagre-primaria rounded-lg">
                 <ScheduleHourSearch 
                 schedules={schedules} cancelIcon={cancel} onDelete={handleDeleteSchedule} />
             </div>

@@ -11,14 +11,23 @@ type ScheduleSearchProps = {
 export function ScheduleHourSearch({ schedules, cancelIcon, onDelete }: ScheduleSearchProps) {
     return (
         <div>
-            {schedules.map((schedule) => (
+            {schedules.map((schedule) => {
+
+                const formattedDate = new Date(schedule.date.replaceAll("-", "/")).toLocaleString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "2-digit"
+                })
+
+                return (
+                
                 <div
-                    className="flex mb-4 p-4 border rounded justify-between items-center"
+                    className="flex mb-2 p-1 border rounded justify-between items-center mobile:p-4 bg-bagre-terciaria"
                     key={schedule.id}>
-                    <div className="flex gap-5 items-center w-full">
-                        <strong className="flex-2">{schedule.atleta}</strong>
-                        <div className="flex flex-2 flex-col mobile:flex-row md:flex-1 gap-3">
-                            <span className="mr-2">{schedule.date}</span>
+                    <div className="flex gap-1 items-center w-full text-[12px] mobile:text-base">
+                        <strong className="flex-2 text-bagre-secundaria">{schedule.atleta}</strong>
+                        <div className="flex flex-2 flex-row gap-3">
+                            <span className="mr-2">{formattedDate}</span>
                             <p>{schedule.hour} h</p>
                         </div>
                     </div>
@@ -27,7 +36,7 @@ export function ScheduleHourSearch({ schedules, cancelIcon, onDelete }: Schedule
                     </div>
 
                 </div>
-            ))}
+            )})}
         </div>
     )
 }

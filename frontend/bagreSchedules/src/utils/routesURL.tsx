@@ -6,7 +6,7 @@ type RoutesURLProps = {
 
 // O Vite vai tentar ler a variável do arquivo .env. 
 // Se não encontrar (no seu PC), ele usa o localhost como "plano B".
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3333";
+const BASE_URL = import.meta.env.VITE_API_URL
 
 export const RoutesURL: RoutesURLProps = {
     "API_LOGIN": `${BASE_URL}/login`,

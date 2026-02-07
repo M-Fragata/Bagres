@@ -3,8 +3,9 @@ import cors from "cors";
 import { routes } from "./routes/index.js";
 const app = express();
 const PORT = process.env.PORT || 3333;
+// 1. Configura as regras
 app.use(cors({
-    origin: "*", // Durante o desenvolvimento, o "*" libera qualquer frontend (localhost:5173, etc)
+    origin: "*", // Libera geral para testarmos e garantir que o login passe
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));

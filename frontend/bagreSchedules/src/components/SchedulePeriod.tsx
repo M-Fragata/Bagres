@@ -6,7 +6,7 @@ type SchedulePeriodProps = {
     icon: string,
     title: string,
     period: string,
-    cancelIcon: string,
+    cancelIcon?: string,
     selectedDate: string,
     schedules: ScheduleProps[],
     onDelete: (id: string) => void
