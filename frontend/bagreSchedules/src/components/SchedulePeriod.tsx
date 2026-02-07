@@ -1,4 +1,3 @@
-import { ButtonIcon } from "./ButtonIcon"
 import type { ScheduleProps } from "../pages/schedule.tsx"
 
 
@@ -9,10 +8,10 @@ type SchedulePeriodProps = {
     cancelIcon?: string,
     selectedDate: string,
     schedules: ScheduleProps[],
-    onDelete: (id: string) => void
+    onDelete?: (id: string) => void
 }
 
-export function SchedulePeriod({ icon, title, period, cancelIcon, selectedDate, schedules, onDelete }: SchedulePeriodProps) {
+export function SchedulePeriod({ icon, title, period, selectedDate, schedules }: SchedulePeriodProps) {
     return (
         <div className="border border-white rounded-2xl p-2 text-white min-h-20">
             <div className="flex justify-between border border-transparent border-b-white mb-2 pb-2">
@@ -40,9 +39,6 @@ export function SchedulePeriod({ icon, title, period, cancelIcon, selectedDate, 
                                         {schedule.atleta}
                                     </p>
                                 </div>
-                                <div>
-                                    <ButtonIcon icon={cancelIcon} onClick={() => onDelete(schedule.id)} />
-                                </div>
                             </div>
                         )
                     } else if (period === "14 - 17h" && hourNumber >= 1400 && hourNumber <= 1700) {
@@ -56,9 +52,6 @@ export function SchedulePeriod({ icon, title, period, cancelIcon, selectedDate, 
                                         {schedule.atleta}
                                     </p>
                                 </div>
-                                <div>
-                                    <ButtonIcon icon={cancelIcon} onClick={() => onDelete(schedule.id)} />
-                                </div>
                             </div>
                         )
                     } else if (period === "18 - 20h" && hourNumber >= 1745 && hourNumber <= 2000) {
@@ -71,9 +64,6 @@ export function SchedulePeriod({ icon, title, period, cancelIcon, selectedDate, 
                                         </strong>
                                         {schedule.atleta}
                                     </p>
-                                </div>
-                                <div>
-                                    <ButtonIcon icon={cancelIcon} onClick={() => onDelete(schedule.id)} />
                                 </div>
                             </div>
                         )
