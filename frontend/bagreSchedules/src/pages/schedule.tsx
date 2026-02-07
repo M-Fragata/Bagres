@@ -31,12 +31,23 @@ export function Schedule() {
 
 
     async function handleSubmit(event: React.FormEvent) {
-
         event.preventDefault()
 
+        const now = new Date()
+
         if (!selectedHour) {
-            alert("Por favor, selecione um horário para o treino.")
-            return
+            alert("Por favor, selecione um horário para o treino.");
+            return;
+        }
+
+        const [year, month, day] = date.split("-").map(Number)
+        const [hour, minute] = selectedHour.split(":").map(Number)
+
+        const scheduleDateTime = new Date(year, month - 1, day, hour, minute)
+
+        if (scheduleDateTime < now) {
+            alert("Não é possível agendar em uma data ou horário que já passou.");
+            return;
         }
 
         try {
@@ -53,11 +64,16 @@ export function Schedule() {
                 })
             })
 
+            const result = await response.json()
+
+            if(response.status === 400) {
+                alert(result.error || "Erro ao processar agendamento")
+                return
+            }
+
             if (!response.ok) {
                 throw new Error("Erro ao salvar agendamento")
             }
-
-            await response.json()
 
             setSelectedHour(null)
             getSchedules()
@@ -160,7 +176,7 @@ export function Schedule() {
     return (
         <main className="bg-bagre-terciaria w-full min-h-full flex flex-col items-center p-3 gap-10 min-[1100px]:flex-row min-[1100px]:justify-center">
             <form onSubmit={handleSubmit}
-                style={{backgroundImage: `url(${priscila})`}}
+                style={{ backgroundImage: `url(${priscila})` }}
                 className="border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)] rounded-2xl p-12 text-white flex flex-col gap-3 bg-cover bg-center mobile:bg-left min-[1100px]:h-[730px]"
             >
                 <div>

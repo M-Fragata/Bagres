@@ -2,12 +2,33 @@ import {} from "express";
 import { prisma } from "../database/prisma.js";
 import { scheduleSchema } from "../schemas/privateSchema.js";
 import { z } from "zod";
+import { sendTelegramMessage } from "../services/telegramService.js";
 export class SchedulesController {
     // Criar Agendamento
     async create(req, res) {
         try {
-            // Valida os dados de entrada (Data, Hora, Nome)
+            // O ZOD CONTINUA AQUI: Se falhar, ele pula para o catch
             const data = scheduleSchema.parse(req.body);
+            //Regra #1 validação de data passada
+            const now = new Date();
+            now.setHours(now.getHours() - 3);
+            const [year, month, day] = data.date.split("-").map(Number);
+            const [hour, minute] = data.hour.split(":").map(Number);
+            const scheduleDateTime = new Date(year, month - 1, day, hour, minute);
+            if (scheduleDateTime < now) {
+                return res.status(400).json({ error: "Não é possível agendar em uma data ou horário que já passou." });
+            }
+            //Regra #2 Limite de 4 Agendamentos por Horário
+            const countSchedules = await prisma.schedules.count({
+                where: {
+                    date: data.date,
+                    hour: data.hour
+                }
+            });
+            if (countSchedules >= 4) {
+                return res.status(400).json({ error: "Este horário já atingiu o limite máximo de 4 atletas." });
+            }
+            // O PRISMA SALVA: Usando os dados que o Zod validou
             const schedule = await prisma.schedules.create({
                 data: {
                     atleta: data.name,
@@ -15,11 +36,23 @@ export class SchedulesController {
                     hour: data.hour,
                 },
             });
+            const formattedDate = new Date(schedule.date.replaceAll("-", "/")).toLocaleDateString("pt-BR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            });
+            // O TELEGRAM ENVIA: O que o banco confirmou
+            const msg = `<b>🏊‍♂️ Novo Agendamento!</b>\n\n` +
+                `<b>Atleta:</b> ${schedule.atleta}\n` +
+                `<b>Data:</b> ${formattedDate}\n` +
+                `<b>Hora:</b> ${schedule.hour}`;
+            await sendTelegramMessage(msg);
             return res.status(201).json(schedule);
         }
         catch (error) {
+            // Se o Zod barrar, o erro cai aqui com a mensagem que você definiu no schema
             if (error instanceof z.ZodError) {
-                return res.status(400).json({ errors: error.message });
+                return res.status(400).json({ errors: error.flatten() });
             }
             return res.status(500).json({ error: "Erro ao criar agendamento" });
         }
@@ -80,9 +113,20 @@ export class SchedulesController {
             if (typeof id !== 'string') {
                 return res.status(400).json({ error: "ID inválido" });
             }
+            const dataDeleted = await prisma.schedules.findUnique({ where: { id } });
             await prisma.schedules.delete({
                 where: { id }
             });
+            const formattedDate = new Date(`${dataDeleted?.date}`.replaceAll("-", "/")).toLocaleDateString('pt-br', {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            });
+            const msg = `<b>❌ Agendamento Cancelado! </b>\n\n` +
+                `<b>Atleta:</b> ${dataDeleted?.atleta}\n` +
+                `<b>Data:</b> ${formattedDate}\n` +
+                `<b>Hora:</b> ${dataDeleted?.hour}`;
+            await sendTelegramMessage(msg);
             return res.status(204).send(); // 204 significa sucesso sem conteúdo de retorno
         }
         catch (error) {

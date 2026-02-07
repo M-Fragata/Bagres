@@ -21,10 +21,18 @@ export function SearchSchedule() {
     const [name, setName] = useState("")
     const [schedules, setSchedules] = useState<ScheduleProps[]>([])
 
+    useEffect(() => {
+        if (user.role === "user") {
+            setName(user.name)
+        }
+    }, [])
 
     async function handleGetSchedules() {
+
+        const searchName = user.role === "admin" ? name : user.name
+
         try {
-            const response = await fetch(`${RoutesURL.API_SCHEDULES}?date=${date}&name=${name}`, {
+            const response = await fetch(`${RoutesURL.API_SCHEDULES}?date=${date}&name=${searchName}`, {
                 method: "GET",
                 headers: {
                     "Content-type": "application/json",
@@ -38,8 +46,6 @@ export function SearchSchedule() {
 
             const data = await response.json()
             setSchedules(data)
-
-            console.log(user.role)
 
         } catch (error) {
             console.error("Erro ao buscar agendamentos:", error)
@@ -79,18 +85,6 @@ export function SearchSchedule() {
         handleGetSchedules()
     }, [date, name])
 
-    useEffect(() => {
-        async function verifyRole() {
-            if (user.role === "admin") {
-                return
-            } else if (user.role === "user") {
-                const nameFormated = user.name.toUpperCase()
-                setName(nameFormated)
-            }
-        }
-        verifyRole()
-
-    }, [])
 
     return (
         <main className="bg-bagre-terciaria w-full flex flex-col items-center justify-center p-3 gap-10">
