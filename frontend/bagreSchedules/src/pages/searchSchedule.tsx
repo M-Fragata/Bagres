@@ -117,15 +117,20 @@ export function SearchSchedule() {
         setHour(schedule.hour)
 
 
-        const now = new Date()
-        const agendamento = new Date(`${date}T${hour}`)
+            const now = new Date()
+            const agendamento = new Date(`${date}T${hour}`)
 
-        if (agendamento < now) {
-            const isConfirm = confirm("Editar horário passado?");
-            if (!isConfirm) {
-                return;
+            if (agendamento < now) {
+                const isConfirm = confirm("Editar agendamento passado?")
+                if (!isConfirm) {
+                    return
+                }
+            } else {
+                const confirmed = window.confirm("Tem certeza que deseja editar este agendamento?")
+                if (!confirmed) {
+                    return
+                }
             }
-        }
 
         setIsModalOpen(true);
     }
