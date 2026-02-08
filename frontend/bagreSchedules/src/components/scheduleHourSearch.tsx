@@ -4,11 +4,12 @@ import { ButtonIcon } from "./ButtonIcon.tsx"
 type ScheduleSearchProps = {
     schedules: ScheduleProps[],
     cancelIcon: string,
-    onDelete: (id: string) => void
+    onDelete: (id: string) => void,
+    editIcon: string,
+    data: (schedules: ScheduleProps) => void
 }
 
-
-export function ScheduleHourSearch({ schedules, cancelIcon, onDelete }: ScheduleSearchProps) {
+export function ScheduleHourSearch({ schedules, cancelIcon, onDelete, editIcon, data }: ScheduleSearchProps) {
     return (
         <div>
             {schedules.map((schedule) => {
@@ -31,7 +32,13 @@ export function ScheduleHourSearch({ schedules, cancelIcon, onDelete }: Schedule
                             <p>{schedule.hour} h</p>
                         </div>
                     </div>
-                    <div>
+                    <div className="flex">
+                        <ButtonIcon 
+                        icon={editIcon} 
+                        onClick={() => {
+                            data(schedule)
+                        }} 
+                        />
                         <ButtonIcon icon={cancelIcon} onClick={() => onDelete(schedule.id)} />
                     </div>
 
