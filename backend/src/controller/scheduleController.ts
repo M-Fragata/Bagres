@@ -17,14 +17,14 @@ export class SchedulesController {
 
             const now = new Date()
             now.setHours(now.getHours() - 3)
-            
+
             const [year, month, day] = data.date.split("-").map(Number)
             const [hour, minute] = data.hour.split(":").map(Number)
 
             const scheduleDateTime = new Date(year!, month! - 1, day, hour, minute)
 
-            if(scheduleDateTime < now) {
-                return res.status(400).json({error: "Não é possível agendar em uma data ou horário que já passou."})
+            if (scheduleDateTime < now) {
+                return res.status(400).json({ error: "Não é possível agendar em uma data ou horário que já passou." })
             }
 
             //Regra #2 Limite de 4 Agendamentos por Horário
@@ -36,8 +36,8 @@ export class SchedulesController {
                 }
             })
 
-            if(countSchedules >= 4) {
-                return res.status(400).json({error: "Este horário já atingiu o limite máximo de 4 atletas."})
+            if (countSchedules >= 4) {
+                return res.status(400).json({ error: "Este horário já atingiu o limite máximo de 4 atletas." })
             }
 
             // O PRISMA SALVA: Usando os dados que o Zod validou
@@ -157,15 +157,16 @@ export class SchedulesController {
             })
 
             const msg = `<b>❌ Agendamento Cancelado! </b>\n\n` +
-            `<b>Atleta:</b> ${dataDeleted?.atleta}\n` +
-            `<b>Data:</b> ${formattedDate}\n` +
-            `<b>Hora:</b> ${dataDeleted?.hour}`;
+                `<b>Atleta:</b> ${dataDeleted?.atleta}\n` +
+                `<b>Data:</b> ${formattedDate}\n` +
+                `<b>Hora:</b> ${dataDeleted?.hour}`;
 
-        await sendTelegramMessage(msg)
+            await sendTelegramMessage(msg)
 
-        return res.status(204).send() // 204 significa sucesso sem conteúdo de retorno
-    } catch(error) {
-        return res.status(400).json({ error: "Erro ao deletar agendamento" })
+            return res.status(204).send() // 204 significa sucesso sem conteúdo de retorno
+        } catch (error) {
+            return res.status(400).json({ error: "Erro ao deletar agendamento" })
+        }
     }
-}
+
 }

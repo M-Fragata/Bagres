@@ -72,6 +72,8 @@ export function SignupPage() {
                 </h1>
                 <div className="w-full px-10 flex flex-col gap-4">
                     <Input
+                        legendClassName="text-white"
+                        inputClassName="text-white"
                         required
                         legend="E-mail:"
                         type="email"
@@ -80,6 +82,8 @@ export function SignupPage() {
                     <div className="flex gap-1 w-full">
                         <div className="flex-1">
                             <Input
+                                legendClassName="text-white"
+                                inputClassName="text-white"
                                 required
                                 legend="Nome:"
                                 onChange={(event) => setFirstName(event.target.value)}
@@ -87,6 +91,8 @@ export function SignupPage() {
                         </div>
                         <div className="flex-1">
                             <Input
+                                legendClassName="text-white"
+                                inputClassName="text-white"
                                 required
                                 legend="Sobrenome:"
                                 onChange={(event) => setLastName(event.target.value)} />
@@ -95,6 +101,8 @@ export function SignupPage() {
                     <div className="flex gap-1 w-full">
                         <div className="flex-1">
                             <Input
+                                legendClassName="text-white"
+                                inputClassName="text-white"
                                 required
                                 legend="Senha:"
                                 type="password"
@@ -104,6 +112,8 @@ export function SignupPage() {
                         <div
                             className="flex-1">
                             <Input
+                                legendClassName="text-white"
+                                inputClassName="text-white"
                                 required
                                 legend="Confirmar Senha:"
                                 type="password"

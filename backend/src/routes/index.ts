@@ -2,9 +2,12 @@ import { Router } from "express";
 import { SchedulesRoutes } from "./schedules.routes.js";
 import { LoginRoutes } from "./login.routes.js"
 import { SessionRoutes } from "./newSession.routes.js";
+import { botTelegram } from "./botTelegram.routes.js"
+
 
 export const routes = Router();
 
 routes.use("/schedules", SchedulesRoutes);
 routes.use("/login", LoginRoutes);
 routes.use("/session", SessionRoutes);
+routes.use("/agenda", botTelegram)

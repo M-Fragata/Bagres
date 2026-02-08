@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { Input } from "../components/Input"
 import { RoutesURL } from "../utils/routesURL"
 import { ScheduleHourSearch } from "../components/scheduleHourSearch"
@@ -22,6 +22,7 @@ export function SearchSchedule() {
     const [date, setDate] = useState("")
     const [name, setName] = useState("")
     const [schedules, setSchedules] = useState<ScheduleProps[]>([])
+    const [hour, setHour] = useState("")
 
     useEffect(() => {
         if (user.role === "user") {
@@ -54,16 +55,31 @@ export function SearchSchedule() {
         }
     }
 
-    async function handleDeleteSchedule(id: string) {
+    async function handleDeleteSchedule(schedule: ScheduleProps) {
         try {
 
-            const confirmed = window.confirm("Tem certeza que deseja deletar este agendamento?")
 
-            if (!confirmed) {
-                return
+
+            setDate(schedule.date)
+            setHour(schedule.hour)
+
+            const now = new Date()
+            const agendamento = new Date(`${date}T${hour}`)
+
+            if (agendamento < now) {
+                const isConfirm = confirm("Excluir agendamento passado?")
+                if (!isConfirm) {
+                    return
+                }
+            } else {
+                const confirmed = window.confirm("Tem certeza que deseja deletar este agendamento?")
+                if (!confirmed) {
+                    return
+                }
             }
 
-            const response = await fetch(`${RoutesURL.API_SCHEDULES}/${id}`, {
+
+            const response = await fetch(`${RoutesURL.API_SCHEDULES}/${schedule.id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-type": "application/json",
@@ -98,6 +114,19 @@ export function SearchSchedule() {
         setEditDate(schedule.date);
         setDate(schedule.date);
         setEditHour(schedule.hour);
+        setHour(schedule.hour)
+
+
+        const now = new Date()
+        const agendamento = new Date(`${date}T${hour}`)
+
+        if (agendamento < now) {
+            const isConfirm = confirm("Editar horário passado?");
+            if (!isConfirm) {
+                return;
+            }
+        }
+
         setIsModalOpen(true);
     }
 
