@@ -74,7 +74,10 @@ export class SchedulesController {
             // 3. Retorno para o Frontend
             const schedules = await prisma.schedules.findMany({
                 where,
-                orderBy: { hour: 'asc' }
+                orderBy: [
+                    { date: 'desc' },
+                    { hour: 'asc' }
+                ]
             });
             return res.json(schedules);
         }

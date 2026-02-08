@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { RoutesURL, token } from "../utils/routesURL"
-import { Input } from "../components/Input"
 
 type AtletasProps = {
     id: string,

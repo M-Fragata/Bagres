@@ -1,0 +1,1 @@
+{"version":3,"file":"atletasController.d.ts","sourceRoot":"","sources":["../../src/controller/atletasController.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,KAAK,OAAO,EAAE,KAAK,QAAQ,EAAE,MAAM,SAAS,CAAC;AAKtD,qBAAa,iBAAiB;IAEpB,KAAK,CAAC,GAAG,EAAE,OAAO,EAAE,GAAG,EAAE,QAAQ;IAmBjC,MAAM,CAAC,GAAG,EAAE,OAAO,EAAE,GAAG,EAAE,QAAQ;IAuClC,MAAM,CAAC,GAAG,EAAE,OAAO,EAAE,GAAG,EAAE,QAAQ;CA0B3C"}
