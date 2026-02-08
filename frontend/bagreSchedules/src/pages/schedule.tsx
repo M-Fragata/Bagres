@@ -4,7 +4,7 @@ import { Input } from "../components/Input"
 import { Button } from "../components/Button"
 import { SchedulePeriod } from "../components/SchedulePeriod"
 import { ScheduleHours } from "../components/ScheduleHours"
-import { RoutesURL } from "../utils/routesURL"
+import { RoutesURL, token } from "../utils/routesURL"
 
 import morning from "../assets/morning.png"
 import afternoon from "../assets/afternoon.png"
@@ -18,8 +18,6 @@ export type ScheduleProps = {
     hour: string
     atleta: string
 }
-
-const token = localStorage.getItem("@bagres:token");
 
 export function Schedule() {
 

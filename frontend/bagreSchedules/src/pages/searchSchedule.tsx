@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react"
 import { Input } from "../components/Input"
-import { RoutesURL } from "../utils/routesURL"
+import { RoutesURL, token } from "../utils/routesURL"
 import { ScheduleHourSearch } from "../components/scheduleHourSearch"
 import { ScheduleHours } from "../components/ScheduleHours"
 
 import cancel from "../assets/trash.png"
 import edit from "../assets/edit.png"
 
-const token = localStorage.getItem("@bagres:token");
 const user = JSON.parse(localStorage.getItem("@bagres:user") || "{}")
 
 export type ScheduleProps = {

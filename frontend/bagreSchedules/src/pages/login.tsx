@@ -2,9 +2,9 @@ import { useState } from "react"
 
 import { Input } from "../components/Input"
 import { Button } from "../components/Button"
-import { RoutesURL } from "../utils/routesURL"
+import { RoutesURL, token } from "../utils/routesURL"
 
-const token = localStorage.getItem("@bagres:token");
+
 
 export function LoginPage() {
 
