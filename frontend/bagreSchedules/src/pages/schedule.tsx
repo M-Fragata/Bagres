@@ -246,7 +246,7 @@ export function Schedule() {
                     onChange={(event) => setDate(event.target.value)}
                 />
                 {!isDayAllowed() ? (
-                    <div className="bg-bagre-primaria border border-red-500 p-6 rounded-xl text-center my-4 animate-pulse">
+                    <div className="bg-bagre-primaria border border-red-500 p-6 rounded-xl text-center my-4 animate-pulse max-w-[500px]">
                         <p className="text-white font-bold">⚠️ Ops! Não há treinos disponíveis para o dia selecionado, favor selecionar uma das datas abaixo.</p>
                         <p className="text-white font-black mt-1 uppercase tracking-wider">
                             {days.length > 0 ? days.join(" • ") : "Nenhum dia configurado"}
