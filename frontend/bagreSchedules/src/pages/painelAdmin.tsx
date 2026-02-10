@@ -15,6 +15,14 @@ export function PainelAdmin() {
     const [ativo, setAtivo] = useState("atletas")
     const [atletas, setAtletas] = useState<AtletasProps[]>()
 
+    const [horarios, setHorarios] = useState([
+        "08:00", "08:45", "09:30", "10:15", "11:00", "11:45",
+        "12:30", "13:15", "14:00", "14:45", "15:30", "16:15",
+        "17:00", "17:45", "18:30", "19:15", "20:00"
+    ]);
+
+    const [diasDisponiveis, setDiasDisponiveis] = useState<string[]>([])
+
     async function handleGetAtletas() {
         try {
             const response = await fetch(RoutesURL.API_ATLETAS, {
@@ -118,10 +126,84 @@ export function PainelAdmin() {
 
     }
 
+    async function handleGetConfig() {
+
+        try {
+
+            const response = await fetch(RoutesURL.API_CONFIG, {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json",
+                    "authorization": `Bearer ${token}`
+                }
+            })
+
+            if (!response.ok) {
+                alert("Falha ao buscar configuração no banco de dados")
+                return
+            }
+
+            const data = await response.json()
+
+            setDiasDisponiveis(data.dias)
+            setHorarios(data.horarios)
+
+        } catch (error) {
+            alert("Falha ao buscar configuração no banco de dados")
+            return
+        }
+
+    }
+
+    async function handlePostConfig() {
+
+        try {
+            const response = await fetch(RoutesURL.API_CONFIG, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                    "authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    dias: diasDisponiveis,
+                    horarios: horarios.sort()
+                })
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                alert(`Erro: ${errorData.error || "Falha ao salvar"}`);
+                return
+            }
+
+
+            handleGetConfig()
+
+            alert("Configurações de agendamento salvas com sucesso!")
+
+
+        } catch (error) {
+
+            console.error("Erro ao salvar:", error);
+            alert("Erro de conexão ao tentar salvar as configurações.")
+
+        }
+
+    }
+
     useEffect(() => {
+        handleGetConfig()
         handleGetAtletas()
     }, [])
 
+
+    const handleDiaChange = (dia: string) => {
+        setDiasDisponiveis(prev =>
+            prev.includes(dia)
+                ? prev.filter(d => d !== dia) // Se já existe, remove
+                : [...prev, dia]             // Se não existe, adiciona
+        );
+    };
 
     return (
         <div className="w-full flex flex-col items-center min-h-screen bg-bagre-terciaria">
@@ -240,10 +322,83 @@ export function PainelAdmin() {
                 )}
 
                 {ativo === "horarios" && (
-                    <section className="animate-in fade-in duration-300">
-                        <h2 className="text-xl mb-4">Configuração de Grade</h2>
 
-                        <p className="text-gray-500 italic">Aqui entrará a gestão de slots (09:30, 09:45) e dias da semana.</p>
+                    <section className="animate-in fade-in duration-300">
+
+                        <div className="border border-bagre-primaria p-6 rounded-2xl flex flex-col items-center">
+                            <h2 className="text-xl mb-4">Configuração dos Agendamentos</h2>
+                            <div className="flex gap-3 justify-center">
+                                <div className="border border-bagre-primaria p-6 rounded-2xl flex-1 flex flex-col">
+                                    <p className="text-gray-500 italic">Informar os horários disponíveis</p>
+
+                                    <div className="flex flex-wrap gap-2 py-2">
+                                        {horarios.map((hora, index) => (
+                                            <div key={index} className="flex items-center bg-bagre-primaria p-2 rounded-lg">
+                                                <input
+                                                    type="time"
+                                                    value={hora}
+                                                    onChange={(e) => {
+                                                        const novos = [...horarios];
+                                                        novos[index] = e.target.value;
+                                                        setHorarios(novos);
+                                                    }}
+                                                    className="bg-transparent text-bagre-terciaria outline-none text-xs font-bold"
+                                                />
+                                                {/* Botão para remover horário se quiser */}
+                                                <button
+                                                    onClick={() => setHorarios(horarios.filter((_, i) => i !== index))} className="text-red-400 text-[13px] font-bold cursor-pointer">X</button>
+                                            </div>
+                                        ))}
+                                        <button
+                                            onClick={() => setHorarios([...horarios, "00:00"])}
+                                            className="border-2 border-dashed border-bagre-primaria px-4 py-1 rounded-lg text-xs cursor-pointer"
+                                        >
+                                            + Add
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="border border-bagre-primaria p-6 rounded-2xl flex-1">
+                                    <div className=" p-6 rounded-2xl flex-1">
+                                        <p className="text-gray-500 italic">Informar os dias disponíveis</p>
+                                        <div className="flex flex-wrap">
+                                            {[
+                                                { id: "seg", label: "Segunda" },
+                                                { id: "ter", label: "Terça" },
+                                                { id: "qua", label: "Quarta" },
+                                                { id: "qui", label: "Quinta" },
+                                                { id: "sex", label: "Sexta" },
+                                                { id: "sab", label: "Sábado" },
+                                                { id: "dom", label: "Domingo" },
+                                            ].map((dia) => (
+                                                <div key={dia.id} className="flex gap-2 items-center p-2 min-w-[100px]">
+                                                    <input
+                                                        type="checkbox"
+                                                        id={dia.id}
+                                                        checked={diasDisponiveis.includes(dia.label)}
+                                                        onChange={() => handleDiaChange(dia.label)}
+                                                        className="cursor-pointer accent-bagre-primaria"
+                                                    />
+                                                    <label htmlFor={dia.id} className="cursor-pointer select-none text-sm">
+                                                        {dia.label}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="flex justify-end mt-4">
+                                            <button
+                                                className="p-2 cursor-pointer text-red-500 font-bold hover:underline text-sm"
+                                                onClick={() => setDiasDisponiveis([])}
+                                            >
+                                                Limpar Dias
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button
+                                onClick={handlePostConfig}
+                                className="p-2 cursor-pointer border font-bold border-bagre-primaria w-full rounded-2xl mt-2 hover:bg-bagre-primaria hover:text-bagre-terciaria hover:underline">Salvar</button>
+                        </div>
                     </section>
                 )}
             </main>

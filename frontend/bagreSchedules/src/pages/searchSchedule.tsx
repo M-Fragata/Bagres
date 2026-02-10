@@ -108,28 +108,28 @@ export function SearchSchedule() {
     const [editHour, setEditHour] = useState("");
 
     function openEditModal(schedule: ScheduleProps) {
+
+        const now = new Date()
+        const agendamento = new Date(`${date}T${hour}`)
+
+        if (agendamento < now) {
+            const isConfirm = confirm("Editar agendamento passado?")
+            if (!isConfirm) {
+                return
+            }
+        } else {
+            const confirmed = window.confirm("Tem certeza que deseja editar este agendamento?")
+            if (!confirmed) {
+                return
+            }
+        }
+
         setCurrentSchedule(schedule);
         setEditName(schedule.atleta);
         setEditDate(schedule.date);
         setDate(schedule.date);
         setEditHour(schedule.hour);
         setHour(schedule.hour)
-
-
-            const now = new Date()
-            const agendamento = new Date(`${date}T${hour}`)
-
-            if (agendamento < now) {
-                const isConfirm = confirm("Editar agendamento passado?")
-                if (!isConfirm) {
-                    return
-                }
-            } else {
-                const confirmed = window.confirm("Tem certeza que deseja editar este agendamento?")
-                if (!confirmed) {
-                    return
-                }
-            }
 
         setIsModalOpen(true);
     }
@@ -251,6 +251,7 @@ export function SearchSchedule() {
                                                 final={1100}
                                                 onSelect={setEditHour}
                                                 selected={editHour}
+                                                schedules={schedules}
                                             />
                                         </div>
 
@@ -261,6 +262,7 @@ export function SearchSchedule() {
                                                 final={1700}
                                                 onSelect={setEditHour}
                                                 selected={editHour}
+                                                schedules={schedules}
                                             />
                                         </div>
 
@@ -271,6 +273,7 @@ export function SearchSchedule() {
                                                 final={2000}
                                                 onSelect={setEditHour}
                                                 selected={editHour}
+                                                schedules={schedules}
                                             />
                                         </div>
                                     </div>

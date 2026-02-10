@@ -57,7 +57,7 @@ export function LayoutPage() {
             <header className="text-white bg-bagre-primaria w-full flex justify-center h-17 shrink-0 sticky top-0 z-[60]">
                 <div className=" shadow pl-7 pr-7 w-full h-full max-w-325 flex justify-between items-center">
                     <div>
-                        <img src={bagres_logo} className="w-5.5" />
+                        <a href="https://m-fragata.github.io/BST-projeto/frontend/src/" target="_blank"><img src={bagres_logo} className="w-5.5" /></a>
                     </div>
                     <div className="flex gap-6 items-center">
                         <div className="flex">
@@ -73,23 +73,25 @@ export function LayoutPage() {
 
                         <div className={`absolute right-0 top-16 m-auto pb-5 bg-bagre-primaria w-full z-50 transition-all duration-300 ease-in-out ${navbar ? "max-h-[300px] opacity-100 visible" : "max-h-0 opacity-0 invisible"}`} >
                             <div className="flex flex-col gap-3">
-                                
-                                <button className="cursor-pointer"><a href="https://m-fragata.github.io/BST-projeto/frontend/src/" target="_blank">Início</a> </button>
 
                                 <button className="cursor-pointer" onClick={() => {
                                     navigate("/")
                                     setNavbar(false)
                                 }}
-                                >Novo Agendamento</button>
+                                >Agendar</button>
 
                                 <button className="cursor-pointer" onClick={() => {
                                     navigate("/search")
                                     setNavbar(false)
-                                }}>Meus agendamentos</button>
+                                }}>Agendamentos</button>
+
+                                {admin && (<button className="cursor-pointer" onClick={() => {
+                                    navigate("/admin")
+                                    setNavbar(false)
+                                    }}>Administrador</button>)}
 
                                 <button className="cursor-pointer" onClick={handleLogout}>Sair</button>
 
-                                {admin && (<button className="cursor-pointer" onClick={() => navigate("/admin")}>Administrador</button>)}
                             </div>
                         </div>
                     </div>

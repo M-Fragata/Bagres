@@ -27,6 +27,8 @@ export function Schedule() {
     const [selectedHour, setSelectedHour] = useState<string | null>(null)
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]) // Formato YYYY-MM-DD
 
+    const [days, setDays] = useState<string[]>([])
+
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault()
@@ -64,7 +66,7 @@ export function Schedule() {
 
             const result = await response.json()
 
-            if(response.status === 400) {
+            if (response.status === 400) {
                 alert(result.error || "Erro ao processar agendamento")
                 return
             }
@@ -161,8 +163,55 @@ export function Schedule() {
         }
     }
 
+
+    async function getHoursConfig() {
+        try {
+
+            const response = await fetch(RoutesURL.API_CONFIG, {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json",
+                    "authorization": `Bearer ${token}`
+                }
+            })
+
+            if (!response.ok) {
+                alert("Falha ao buscar configuração no banco de dados")
+                return
+            }
+
+            const data = await response.json()
+
+            if (data) setDays(data.dias)
+
+        } catch (error) {
+            alert("Falha ao buscar configuração no banco de dados")
+            return
+        }
+
+    }
+
+    const isDayAllowed = () => {
+        if (days.length === 0) return true
+
+        const mapaDias: Record<number, string> = {
+            0: "Domingo", 1: "Segunda", 2: "Terça", 3: "Quarta", 4: "Quinta", 5: "Sexta", 6: "Sábado"
+        }
+
+        const [year, month, day] = date.split("-").map(Number);
+        const selectedDate = new Date(year, month - 1, day);
+        const dayName = mapaDias[selectedDate.getDay()];
+
+        return days.includes(dayName)
+
+    }
+
+
+
+
     // Busca o nome apenas UMA vez quando a tela carrega
     useEffect(() => {
+        getHoursConfig()
         getNameLogged()
     }, [])
 
@@ -180,8 +229,12 @@ export function Schedule() {
                 <div>
                     <h1>Agende seu treinamento</h1>
                     <div>
-                        <h2>Atenção!</h2>
-                        <p>Agendamento para treinos apenas nas Segundas e Quartas-feiras</p>
+                        <h2 className="text-bagre-primaria font-medium">Atenção!</h2>
+                        {days.length > 0 && (
+                            <p className="text-xs text-bagre-primaria font-medium py-2 italic">
+                                Dias disponíveis: <span className="text-white font-bold">{days.join(", ")}.</span>
+                            </p>
+                        )}
                         <p>Informe a data, horário e o nome do atleta para criar o agendamento.</p>
                     </div>
                 </div>
@@ -192,40 +245,50 @@ export function Schedule() {
                     value={date}
                     onChange={(event) => setDate(event.target.value)}
                 />
-
-                <h2>Horários</h2>
-                <div className="flex gap-2">
-                    <div className="flex flex-col gap-1">
-                        < ScheduleHours
-                            title="Manhã"
-                            initial={800}
-                            final={1100}
-                            onSelect={setSelectedHour}
-                            selected={selectedHour}
-                        />
+                {!isDayAllowed() ? (
+                    <div className="bg-bagre-primaria border border-red-500 p-6 rounded-xl text-center my-4 animate-pulse">
+                        <p className="text-white font-bold">⚠️ Ops! Não há treinos disponíveis para o dia selecionado, favor selecionar uma das datas abaixo.</p>
+                        <p className="text-white font-black mt-1 uppercase tracking-wider">
+                            {days.length > 0 ? days.join(" • ") : "Nenhum dia configurado"}
+                        </p>
                     </div>
-
-                    <div className="flex flex-col gap-1">
-                        < ScheduleHours
-                            title="Tarde"
-                            initial={1400}
-                            final={1700}
-                            onSelect={setSelectedHour}
-                            selected={selectedHour}
-                        />
+                ) : (<div>
+                    
+                    <h2>Horários</h2>
+                    <div className="flex gap-2">
+                        <div className="flex flex-col gap-1">
+                            < ScheduleHours
+                                title="Manhã"
+                                initial={600}
+                                final={1200}
+                                onSelect={setSelectedHour}
+                                selected={selectedHour}
+                                schedules={schedule}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            < ScheduleHours
+                                title="Tarde"
+                                initial={1400}
+                                final={1700}
+                                onSelect={setSelectedHour}
+                                selected={selectedHour}
+                                schedules={schedule}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            < ScheduleHours
+                                title="Noite"
+                                initial={1745}
+                                final={2200}
+                                onSelect={setSelectedHour}
+                                selected={selectedHour}
+                                schedules={schedule}
+                            />
+                        </div>
                     </div>
-
-                    <div className="flex flex-col gap-1">
-                        < ScheduleHours
-                            title="Noite"
-                            initial={1745}
-                            final={2000}
-                            onSelect={setSelectedHour}
-                            selected={selectedHour}
-                        />
-                    </div>
-                </div>
-
+                    
+                </div>)}
                 <Input
                     disabled
                     required

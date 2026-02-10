@@ -30,3 +30,10 @@ model Atletas {
 
   @@map("Atletas")
 }
+
+model Config {
+  id        Int      @id @default(1)
+  dias      String[] // Ex: ["Segunda", "Terça"]
+  horarios  String[] // Ex: ["08:00", "08:45"]
+  updatedAt DateTime @updatedAt
+}
