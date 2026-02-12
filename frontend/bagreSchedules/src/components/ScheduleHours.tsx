@@ -9,10 +9,10 @@ type ScheduleHoursProps = {
     final: number,
     selected?: string | null,
     onSelect?: (hour: string) => void,
-    schedules: ScheduleProps[],
+    schedules?: ScheduleProps[],
 }
 
-export function ScheduleHours({ title, initial, final, selected, onSelect, schedules }: ScheduleHoursProps) {
+export function ScheduleHours({ title, initial, final, selected, onSelect }: ScheduleHoursProps) {
 
     const [hours, setHours] = useState<string[]>([])
 
