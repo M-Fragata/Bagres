@@ -53,18 +53,16 @@ export function ScheduleHours({ title, initial, final, selected, onSelect, sched
                 <p className="text-center">{title}</p>
                 {hours && hours.map((hour) => {
 
-                    const ocupado = schedules.some(item => item.hour === hour)
-
                     const hourNumber = Number(hour.replace(":", ""))
                     //08:00 -> 0800
+                    
                     if (initial <= hourNumber && hourNumber <= final) {
                         return (<HourButton
                             key={hour}
                             title={hour}
                             value={hour}
                             isActive={selected === hour}
-                            disabled={ocupado}
-                            onClick={() => !ocupado && onSelect?.(hour)}
+                            onClick={() => onSelect?.(hour)}
                         />
                         )
                     }
