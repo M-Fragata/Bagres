@@ -8,8 +8,18 @@ export class BotTelegramController {
             if (!date) {
                 return res.status(400).json({ error: "Data é obrigatória" });
             }
-            const [day, month, year] = String(date).split("/");
-            const dateFormatted = (`${year}-${month}-${day}`);
+            let dateFormatted = "";
+            let dateBrazil = "";
+            if (date.toString().includes("/")) {
+                const [day, month, year] = String(date).split("/");
+                dateBrazil = (`${day}/${month}/${year}`);
+                dateFormatted = (`${year}-${month}-${day}`);
+            }
+            else if (date.toString().includes("-")) {
+                const [year, month, day] = String(date).split("-");
+                dateBrazil = (`${day}/${month}/${year}`);
+                dateFormatted = String(date);
+            }
             const schedules = await prisma.schedules.findMany({
                 where: {
                     date: String(dateFormatted)
@@ -19,10 +29,10 @@ export class BotTelegramController {
                 }
             });
             if (schedules.length === 0) {
-                await sendTelegramMessage(`<b>📅 Agenda: ${date}</b>\n\nNenhum agendamento para hoje.`);
+                await sendTelegramMessage(`<b>📅 Agenda: ${dateBrazil}</b>\n\nNenhum agendamento para hoje.`);
                 return res.json({ message: "Relatório vazio enviado" });
             }
-            let msg = `<b>📅 Agenda do Dia: ${date}</b>\n\n`;
+            let msg = `<b>📅 Agenda do Dia: ${dateBrazil}</b>\n\n`;
             const horarios = [...new Set(schedules.map(schedule => schedule.hour))];
             horarios.forEach(horario => {
                 const atletaHour = schedules.filter(schedule => schedule.hour === horario);
