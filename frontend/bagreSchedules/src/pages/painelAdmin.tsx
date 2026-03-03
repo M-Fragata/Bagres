@@ -327,13 +327,13 @@ export function PainelAdmin() {
 
                         <div className="border border-bagre-primaria p-6 rounded-2xl flex flex-col items-center">
                             <h2 className="text-xl mb-4">Configuração dos Agendamentos</h2>
-                            <div className="flex gap-3 justify-center">
+                            <div className="flex flex-col md:flex-row gap-3 justify-center ">
                                 <div className="border border-bagre-primaria p-6 rounded-2xl flex-1 flex flex-col">
-                                    <p className="text-gray-500 italic">Informar os horários disponíveis</p>
+                                    <p className="text-gray-500 italic text-center pb-6">Informar os horários disponíveis</p>
 
-                                    <div className="flex flex-wrap gap-2 py-2">
+                                    <div className="flex flex-wrap justify-center gap-2 py-2">
                                         {horarios.map((hora, index) => (
-                                            <div key={index} className="flex items-center bg-bagre-primaria p-2 rounded-lg">
+                                            <div key={index} className="flex align-middle items-center bg-bagre-primaria p-2 rounded-lg">
                                                 <input
                                                     type="time"
                                                     value={hora}
@@ -358,9 +358,9 @@ export function PainelAdmin() {
                                     </div>
                                 </div>
                                 <div className="border border-bagre-primaria p-6 rounded-2xl flex-1">
-                                    <div className=" p-6 rounded-2xl flex-1">
-                                        <p className="text-gray-500 italic">Informar os dias disponíveis</p>
-                                        <div className="flex flex-wrap">
+                                    <div className=" rounded-2xl flex-1">
+                                        <p className="text-gray-500 italic text-center pb-6">Informar os dias disponíveis</p>
+                                        <div className="flex flex-wrap w-full justify-center">
                                             {[
                                                 { id: "seg", label: "Segunda" },
                                                 { id: "ter", label: "Terça" },
@@ -386,7 +386,7 @@ export function PainelAdmin() {
                                         </div>
                                         <div className="flex justify-end mt-4">
                                             <button
-                                                className="p-2 cursor-pointer text-red-500 font-bold hover:underline text-sm"
+                                                className="p-2 cursor-pointer text-red-500 font-bold hover:underline text-sm rounded-2xl  hover:bg-bagre-secundaria hover:text-bagre-terciaria"
                                                 onClick={() => setDiasDisponiveis([])}
                                             >
                                                 Limpar Dias
