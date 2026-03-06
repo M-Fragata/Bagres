@@ -4,11 +4,11 @@ import { prisma } from "../database/prisma.js";
 import { z } from "zod";
 export class ConfigController {
     async create(req, res) {
-        const data = configSchema.parse(req.body);
-        if (!data) {
-            return res.json({ error: "Dados não recebidos." });
-        }
         try {
+            const data = configSchema.parse(req.body);
+            if (!data) {
+                return res.json({ error: "Dados não recebidos." });
+            }
             const configData = await prisma.config.upsert({
                 where: { id: 1 },
                 update: {
@@ -28,7 +28,7 @@ export class ConfigController {
                 const zodError = error;
                 return res.status(400).json({
                     message: "Dados inválidos",
-                    errors: zodError.flatten().fieldErrors
+                    errors: z.treeifyError(error)
                 });
             }
             console.error("Falha ao salvar configuração:", error);
