@@ -183,6 +183,54 @@ export function SearchSchedule() {
     }, [date, name])
 
 
+    async function getHoursConfig() {
+        try {
+
+            const response = await fetch(RoutesURL.API_CONFIG, {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json",
+                    "authorization": `Bearer ${token}`
+                }
+            })
+
+            if (!response.ok) {
+                alert("Falha ao buscar configuração no banco de dados")
+                return
+            }
+
+            const data = await response.json()
+
+            if (data) {
+                setConfigHours(data.horarios)
+            }
+
+        } catch (error) {
+            alert("Falha ao buscar configuração no banco de dados")
+            return
+        }
+
+    }
+
+    useEffect(() => {
+        getHoursConfig()
+    }, [])
+
+    const [configHours, setConfigHours] = useState<Record<string, string[]>>({});
+
+    // ... dentro do useEffect que busca a config ...
+    // setConfigHours(data.horarios)
+
+    const getDayName = (dateString: string) => {
+        const [year, month, day] = dateString.split("-").map(Number);
+        const dateObj = new Date(year, month - 1, day);
+        const dias = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+        return dias[dateObj.getDay()];
+    };
+
+    const diaNome = getDayName(date); 
+    const horasAtuais = configHours[diaNome] || []
+
     return (
         <main className="bg-bagre-terciaria w-full flex flex-col items-center justify-center p-3 gap-10">
             <div className="flex w-full max-w-200 p-2 border border-bagre-terciaria rounded-lg shadow-2xl">
@@ -251,7 +299,7 @@ export function SearchSchedule() {
                                                 final={1100}
                                                 onSelect={setEditHour}
                                                 selected={editHour}
-                                                schedules={schedules}
+                                                availabeHours={horasAtuais}
                                             />
                                         </div>
 
@@ -262,7 +310,7 @@ export function SearchSchedule() {
                                                 final={1700}
                                                 onSelect={setEditHour}
                                                 selected={editHour}
-                                                schedules={schedules}
+                                                availabeHours={horasAtuais}
                                             />
                                         </div>
 
@@ -273,7 +321,7 @@ export function SearchSchedule() {
                                                 final={2000}
                                                 onSelect={setEditHour}
                                                 selected={editHour}
-                                                schedules={schedules}
+                                                availabeHours={horasAtuais}
                                             />
                                         </div>
                                     </div>
