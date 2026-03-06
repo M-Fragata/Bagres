@@ -15,13 +15,27 @@ export function PainelAdmin() {
     const [ativo, setAtivo] = useState("atletas")
     const [atletas, setAtletas] = useState<AtletasProps[]>()
 
-    const [horarios, setHorarios] = useState([
-        "08:00", "08:45", "09:30", "10:15", "11:00", "11:45",
-        "12:30", "13:15", "14:00", "14:45", "15:30", "16:15",
-        "17:00", "17:45", "18:30", "19:15", "20:00"
-    ]);
+    const [configAgendamento, setConfigAgendamento] = useState<Record<string, string[]>>({
+        "Segunda": [],
+        "Terça": [],
+        "Quarta": [],
+        "Quinta": [],
+        "Sexta": [],
+        "Sábado": [],
+        "Domingo": []
+    })
 
-    const [diasDisponiveis, setDiasDisponiveis] = useState<string[]>([])
+
+    const [diasAtivos, setDiasAtivos] = useState<Record<string, boolean>>({
+        "Segunda": true,
+        "Terça": false,
+        "Quarta": true,
+        "Quinta": false,
+        "Sexta": false,
+        "Sábado": false,
+        "Domingo": false
+    });
+
 
     async function handleGetAtletas() {
         try {
@@ -145,8 +159,19 @@ export function PainelAdmin() {
 
             const data = await response.json()
 
-            setDiasDisponiveis(data.dias)
-            setHorarios(data.horarios)
+            if (data.horarios) {
+                setConfigAgendamento(prev => ({
+                    ...prev,    
+                    ...data.horarios
+                }));
+            }
+
+            if (data.dias) {
+                setDiasAtivos(prev => ({
+                    ...prev,
+                    ...data.dias
+                }));
+            }
 
         } catch (error) {
             alert("Falha ao buscar configuração no banco de dados")
@@ -157,6 +182,16 @@ export function PainelAdmin() {
 
     async function handlePostConfig() {
 
+        const configuracaoParaSalvar = Object.keys(configAgendamento)
+            .reduce((acc, dia) => {
+                if (diasAtivos[dia]) {
+                    acc[dia] = configAgendamento[dia];
+                } else {
+                    acc[dia] = [];
+                }
+                return acc;
+            }, {} as Record<string, string[]>)
+
         try {
             const response = await fetch(RoutesURL.API_CONFIG, {
                 method: "POST",
@@ -165,8 +200,8 @@ export function PainelAdmin() {
                     "authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    dias: diasDisponiveis,
-                    horarios: horarios.sort()
+                    dias: diasAtivos,
+                    horarios: configuracaoParaSalvar
                 })
             })
 
@@ -197,13 +232,20 @@ export function PainelAdmin() {
     }, [])
 
 
-    const handleDiaChange = (dia: string) => {
-        setDiasDisponiveis(prev =>
-            prev.includes(dia)
-                ? prev.filter(d => d !== dia) // Se já existe, remove
-                : [...prev, dia]             // Se não existe, adiciona
-        );
+    const addHorarioAoDia = (dia: string) => {
+        setConfigAgendamento(prev => ({
+            ...prev,
+            [dia]: [...prev[dia], "00:00"].sort()
+        }));
     };
+
+    const removeHorarioDoDia = (dia: string, index: number) => {
+        setConfigAgendamento(prev => ({
+            ...prev,
+            [dia]: prev[dia].filter((_, i) => i !== index)
+        }));
+    };
+
 
     return (
         <div className="w-full flex flex-col items-center min-h-screen bg-bagre-terciaria">
@@ -322,82 +364,84 @@ export function PainelAdmin() {
                 )}
 
                 {ativo === "horarios" && (
+                    <section className="animate-in fade-in duration-300 w-full flex flex-col items-center">
+                        <div className="bg-bagre-primaria p-6 rounded-2xl w-full max-w-4xl">
+                            <h2 className="text-xl mb-4 text-bagre-terciaria text-center font-bold">
+                                Configuração dos Agendamentos
+                            </h2>
 
-                    <section className="animate-in fade-in duration-300">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                {Object.keys(configAgendamento).map((dia) => {
+                                    const estaAtivo = diasAtivos[dia];
 
-                        <div className="border border-bagre-primaria p-6 rounded-2xl flex flex-col items-center">
-                            <h2 className="text-xl mb-4">Configuração dos Agendamentos</h2>
-                            <div className="flex flex-col md:flex-row gap-3 justify-center ">
-                                <div className="border border-bagre-primaria p-6 rounded-2xl flex-1 flex flex-col">
-                                    <p className="text-gray-500 italic text-center pb-6">Informar os horários disponíveis</p>
-
-                                    <div className="flex flex-wrap justify-center gap-2 py-2">
-                                        {horarios.map((hora, index) => (
-                                            <div key={index} className="flex align-middle items-center bg-bagre-primaria p-2 rounded-lg">
-                                                <input
-                                                    type="time"
-                                                    value={hora}
-                                                    onChange={(e) => {
-                                                        const novos = [...horarios];
-                                                        novos[index] = e.target.value;
-                                                        setHorarios(novos);
-                                                    }}
-                                                    className="bg-transparent text-bagre-terciaria outline-none text-xs font-bold"
-                                                />
-                                                {/* Botão para remover horário se quiser */}
-                                                <button
-                                                    onClick={() => setHorarios(horarios.filter((_, i) => i !== index))} className="text-red-400 text-[13px] font-bold cursor-pointer">X</button>
-                                            </div>
-                                        ))}
-                                        <button
-                                            onClick={() => setHorarios([...horarios, "00:00"])}
-                                            className="border-2 border-dashed border-bagre-primaria px-4 py-1 rounded-lg text-xs cursor-pointer"
+                                    return (
+                                        <div
+                                            key={dia}
+                                            className={`transition-all duration-300 border p-4 rounded-xl mb-4 shadow-sm 
+                ${estaAtivo
+                                                    ? 'bg-white border-bagre-secundaria scale-100'
+                                                    : 'bg-gray-200 opacity-50 scale-95 grayscale'}`}
                                         >
-                                            + Add
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="border border-bagre-primaria p-6 rounded-2xl flex-1">
-                                    <div className=" rounded-2xl flex-1">
-                                        <p className="text-gray-500 italic text-center pb-6">Informar os dias disponíveis</p>
-                                        <div className="flex flex-wrap w-full justify-center">
-                                            {[
-                                                { id: "seg", label: "Segunda" },
-                                                { id: "ter", label: "Terça" },
-                                                { id: "qua", label: "Quarta" },
-                                                { id: "qui", label: "Quinta" },
-                                                { id: "sex", label: "Sexta" },
-                                                { id: "sab", label: "Sábado" },
-                                                { id: "dom", label: "Domingo" },
-                                            ].map((dia) => (
-                                                <div key={dia.id} className="flex gap-2 items-center p-2 min-w-[100px]">
-                                                    <input
-                                                        type="checkbox"
-                                                        id={dia.id}
-                                                        checked={diasDisponiveis.includes(dia.label)}
-                                                        onChange={() => handleDiaChange(dia.label)}
-                                                        className="cursor-pointer accent-bagre-primaria"
-                                                    />
-                                                    <label htmlFor={dia.id} className="cursor-pointer select-none text-sm">
-                                                        {dia.label}
-                                                    </label>
+                                            <div className="flex justify-between items-center mb-2">
+                                                <h3 className={`font-bold ${estaAtivo ? 'text-bagre-primaria' : 'text-gray-500'}`}>
+                                                    {dia}
+                                                </h3>
+
+                                                {/* Checkbox Estilizado ou Toggle */}
+                                                <input
+                                                    type="checkbox"
+                                                    checked={estaAtivo}
+                                                    onChange={() => setDiasAtivos(prev => ({ ...prev, [dia]: !prev[dia] }))}
+                                                    className="w-5 h-5 cursor-pointer accent-bagre-secundaria"
+                                                />
+                                            </div>
+
+                                            {/* Se o dia estiver ativo, mostra os horários. Se não, mostra um aviso. */}
+                                            {estaAtivo ? (
+                                                <div className="flex flex-col gap-2 mt-2 animate-in slide-in-from-top-2">
+                                                    {configAgendamento[dia].map((hora, index) => (
+                                                        <div key={index} className="flex items-center bg-bagre-primaria p-2 rounded-lg shadow-inner">
+                                                            <input
+                                                                type="time"
+                                                                value={hora}
+                                                                onChange={(e) => {
+                                                                    const novos = [...configAgendamento[dia]];
+                                                                    novos[index] = e.target.value;
+                                                                    setConfigAgendamento({ ...configAgendamento, [dia]: novos });
+                                                                }}
+                                                                className="text-white text-sm bg-transparent outline-none flex-1"
+                                                            />
+                                                            <button
+                                                                onClick={() => removeHorarioDoDia(dia, index)}
+                                                                className="text-red-400 hover:text-red-200 ml-2 font-bold"
+                                                            >
+                                                                ×
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                    <button
+                                                        onClick={() => addHorarioAoDia(dia)}
+                                                        className="text-xs font-semibold text-bagre-primaria border-2 border-dashed border-bagre-primaria/30 p-2 rounded-lg hover:bg-bagre-primaria/5 transition-colors"
+                                                    >
+                                                        + Adicionar Horário
+                                                    </button>
                                                 </div>
-                                            ))}
+                                            ) : (
+                                                <p className="text-[10px] text-gray-500 italic mt-4 text-center">
+                                                    Sem treinos programados
+                                                </p>
+                                            )}
                                         </div>
-                                        <div className="flex justify-end mt-4">
-                                            <button
-                                                className="p-2 cursor-pointer text-red-500 font-bold hover:underline text-sm rounded-2xl  hover:bg-bagre-secundaria hover:text-bagre-terciaria"
-                                                onClick={() => setDiasDisponiveis([])}
-                                            >
-                                                Limpar Dias
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                    );
+                                })}
                             </div>
+
                             <button
                                 onClick={handlePostConfig}
-                                className="p-2 cursor-pointer border font-bold border-bagre-primaria w-full rounded-2xl mt-2 hover:bg-bagre-primaria hover:text-bagre-terciaria hover:underline">Salvar</button>
+                                className="mt-8 w-full py-3 bg-bagre-secundaria text-bagre-terciaria font-bold rounded-xl hover:brightness-110 transition-all"
+                            >
+                                SALVAR TODAS AS CONFIGURAÇÕES
+                            </button>
                         </div>
                     </section>
                 )}
