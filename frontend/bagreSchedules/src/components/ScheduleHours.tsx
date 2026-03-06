@@ -1,7 +1,4 @@
-import { useState, useEffect } from "react"
 import { HourButton } from "../components/HourButton"
-import { RoutesURL, token } from "../utils/routesURL"
-import { type ScheduleProps } from "../pages/schedule"
 
 type ScheduleHoursProps = {
     title: string,
@@ -9,49 +6,16 @@ type ScheduleHoursProps = {
     final: number,
     selected?: string | null,
     onSelect?: (hour: string) => void,
-    schedules?: ScheduleProps[],
+    availabeHours: string[],
 }
 
-export function ScheduleHours({ title, initial, final, selected, onSelect }: ScheduleHoursProps) {
-
-    const [hours, setHours] = useState<string[]>([])
-
-    async function getHoursConfig() {
-        try {
-
-            const response = await fetch(RoutesURL.API_CONFIG, {
-                method: "GET",
-                headers: {
-                    "Content-type": "application/json",
-                    "authorization": `Bearer ${token}`
-                }
-            })
-
-            if (!response.ok) {
-                alert("Falha ao buscar configuração no banco de dados")
-                return
-            }
-
-            const data = await response.json()
-
-            setHours(data.horarios)
-
-        } catch (error) {
-            alert("Falha ao buscar configuração no banco de dados")
-            return
-        }
-
-    }
-
-    useEffect(() => {
-        getHoursConfig()
-    }, [])
+export function ScheduleHours({ title, initial, final, selected, onSelect, availabeHours }: ScheduleHoursProps) {
 
     return (
         <div className="flex gap-2">
             <div className="flex flex-col gap-1">
                 <p className="text-center">{title}</p>
-                {hours && hours.map((hour) => {
+                {availabeHours && availabeHours.map((hour) => {
 
                     const hourNumber = Number(hour.replace(":", ""))
                     //08:00 -> 0800
