@@ -37,10 +37,11 @@ export function Schedule() {
 //---------------------- Limite de horário
 
         const now = new Date()
-        const limiteHour = new Date()
-        limiteHour.setHours(now.getHours() + 24)
 
-//-------------------------
+        const daylimit = 1
+        const limiteEmMs = daylimit * 24 * 60 * 60 * 1000 // 24 horas em milissegundos
+        const limiteHour = new Date(now.getTime() + limiteEmMs) // Limite de 24 horas a partir do momento atual
+
         if (!selectedHour) {
             alert("Por favor, selecione um horário para o treino.");
             return;
@@ -57,11 +58,12 @@ export function Schedule() {
             return;
         }
         
-        if(scheduleDateTime > limiteHour) {
-            alert("Não é possível agendar com mais de 24 horas de antecedência.")
+        if(scheduleDateTime < limiteHour) {
+            alert("Não é possível agendar com menos de 24 horas de antecedência.")
             return
         }
 
+//-------------------------
         setIsDisabled(true)
 
         try {
@@ -81,12 +83,15 @@ export function Schedule() {
             const result = await response.json()
 
             if (response.status === 400) {
+                setIsDisabled(false)
                 alert(result.error || "Erro ao processar agendamento")
                 return
             }
 
             if (!response.ok) {
+                setIsDisabled(false)
                 throw new Error("Erro ao salvar agendamento")
+                
             }
 
             setSelectedHour(null)
