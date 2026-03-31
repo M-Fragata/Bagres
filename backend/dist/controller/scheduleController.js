@@ -9,6 +9,7 @@ export class SchedulesController {
         try {
             // O ZOD CONTINUA AQUI: Se falhar, ele pula para o catch
             const data = scheduleSchema.parse(req.body);
+            const id = req.userId;
             //Regra #1 validação de data passada
             const now = new Date();
             now.setHours(now.getHours() - 3);
@@ -17,6 +18,14 @@ export class SchedulesController {
             const scheduleDateTime = new Date(year, month - 1, day, hour, minute);
             if (scheduleDateTime < now) {
                 return res.status(400).json({ error: "Não é possível agendar em uma data ou horário que já passou." });
+            }
+            //Limite de 24 horas para agendamento
+            const limiteHour = new Date();
+            let daylimit = 1;
+            let limiteEmMs = daylimit * 24 * 60 * 60 * 1000; // 24 horas em milissegundos
+            limiteHour.setHours(now.getTime() + limiteEmMs);
+            if (scheduleDateTime < limiteHour) {
+                return res.status(400).json({ error: "Não é possível agendar com menos de 24 horas de antecedência." });
             }
             //Regra #2 Limite de 4 Agendamentos por Horário
             const countSchedules = await prisma.schedules.count({
@@ -28,12 +37,23 @@ export class SchedulesController {
             if (countSchedules >= 4) {
                 return res.status(400).json({ error: "Este horário já atingiu o limite máximo de 4 atletas." });
             }
+            // Verifica se usuário já possui um agendamento no mesmo dia
+            const isScheduleSameDat = await prisma.schedules.findFirst({
+                where: {
+                    atleta_id: id,
+                    date: data.date
+                }
+            });
+            if (isScheduleSameDat) {
+                return res.status(400).json({ error: "Você já possui um agendamento para este dia." });
+            }
             // O PRISMA SALVA: Usando os dados que o Zod validou
             const schedule = await prisma.schedules.create({
                 data: {
                     atleta: data.name,
                     date: data.date,
                     hour: data.hour,
+                    atleta_id: id
                 },
             });
             const formattedDate = new Date(schedule.date.replaceAll("-", "/")).toLocaleDateString("pt-BR", {
