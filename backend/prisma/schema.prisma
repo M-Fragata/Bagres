@@ -12,6 +12,10 @@ model Schedules {
   atleta    String
   date      String
   hour      String
+
+  atleta_id String?  // Começa como opcional para a migration aceitar dados antigos
+  atletaRel Atletas? @relation(fields: [atleta_id], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -25,6 +29,9 @@ model Atletas {
   email     String   @unique
   password  String
   role      String @default("user")
+
+  schedules Schedules[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
