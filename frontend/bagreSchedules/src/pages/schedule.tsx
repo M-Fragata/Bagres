@@ -29,27 +29,40 @@ export function Schedule() {
 
     const [days, setDays] = useState<Record<string, boolean>>({})
     const [hours, setHours] = useState<Record<string, string[]>>({})
-
+    const [isDisabled, setIsDisabled] = useState(false)
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault()
 
-        const now = new Date()
+//---------------------- Limite de horário
 
+        const now = new Date()
+        const limiteHour = new Date()
+        limiteHour.setHours(now.getHours() + 24)
+
+//-------------------------
         if (!selectedHour) {
             alert("Por favor, selecione um horário para o treino.");
             return;
         }
 
+        
         const [year, month, day] = date.split("-").map(Number)
         const [hour, minute] = selectedHour.split(":").map(Number)
-
+        
         const scheduleDateTime = new Date(year, month - 1, day, hour, minute)
-
+        
         if (scheduleDateTime < now) {
             alert("Não é possível agendar em uma data ou horário que já passou.");
             return;
         }
+        
+        if(scheduleDateTime > limiteHour) {
+            alert("Não é possível agendar com mais de 24 horas de antecedência.")
+            return
+        }
+
+        setIsDisabled(true)
 
         try {
             const response = await fetch(RoutesURL.API_SCHEDULES, {
@@ -78,11 +91,14 @@ export function Schedule() {
 
             setSelectedHour(null)
             getSchedules()
+            setIsDisabled(false)
 
             alert("Agendado com sucesso")
         } catch (error) {
             console.log(error)
             alert("Falha ao conectar com servidor")
+
+            setIsDisabled(false)
         }
 
     }
@@ -135,6 +151,7 @@ export function Schedule() {
 
     }
 
+    /* // Função de deletar agendamento na página de agendamento não é mais utilizada.
     async function handleDeleteSchedule(id: string) {
         try {
 
@@ -163,6 +180,7 @@ export function Schedule() {
             console.error("Erro ao deletar agendamento: ", error)
         }
     }
+*/
 
     async function getHoursConfig() {
         try {
@@ -294,7 +312,8 @@ export function Schedule() {
                     onChange={(event) => setName(event.target.value)}
                 />
                 <Button
-                    title="Agendar Treino"
+                    disabled={isDisabled}
+                    title={isDisabled ? "Agendando..." : "Agendar Treino"}
                 />
             </form>
             <section className="bg-bagre-primaria rounded-2xl p-12 min-[1100px]:h-[730px] flex flex-col h-full">
@@ -316,7 +335,6 @@ export function Schedule() {
                         period="08 - 11h"
                         selectedDate={date}
                         schedules={schedule}
-                        onDelete={handleDeleteSchedule}
                     />
                     < SchedulePeriod
                         icon={afternoon}
@@ -324,7 +342,6 @@ export function Schedule() {
                         period="14 - 17h"
                         selectedDate={date}
                         schedules={schedule}
-                        onDelete={handleDeleteSchedule}
                     />
                     < SchedulePeriod
                         icon={night}
@@ -332,7 +349,6 @@ export function Schedule() {
                         period="18 - 20h"
                         selectedDate={date}
                         schedules={schedule}
-                        onDelete={handleDeleteSchedule}
                     />
                 </aside>
             </section>
