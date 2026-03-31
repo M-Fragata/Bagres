@@ -5,13 +5,17 @@ import bcrypt from 'bcryptjs';
 export class AtletaController {
   async create(req: Request, res: Response) {
     try {
-      const { firstName, lastName, email, password } = req.body;
+      const { firstName, lastName, email, password, confirmPassword } = req.body;
 
       // 1. Verificar se o e-mail já existe
       const userExists = await prisma.atletas.findUnique({ where: { email } });
 
       if (userExists) {
         return res.status(400).json({ error: "Este e-mail já está cadastrado." });
+      }
+
+      if (password !== confirmPassword) {
+        return res.status(400).json({ error: "Senhas diferentes." });
       }
 
       // 2. Criptografar a senha
