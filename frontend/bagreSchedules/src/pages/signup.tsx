@@ -13,16 +13,17 @@ export function SignupPage() {
     const [lastName, setLastName] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [isDisabled, setIsDisabled] = useState(false)
 
     const navigate = useNavigate();
 
     async function handleSubmit(event: React.FormEvent) {
+        setIsDisabled(true)
 
         event.preventDefault()
-        console.log({ mail, firstName, lastName, password, confirmPassword })
 
         try {
-
+            
             const response = await fetch(RoutesURL.API_SESSION, {
                 method: "POST",
                 headers: {
@@ -32,7 +33,8 @@ export function SignupPage() {
                     firstName: firstName,
                     lastName: lastName,
                     email: mail,
-                    password: password
+                    password: password,
+                    confirmPassword: confirmPassword
                 })
             })
 
@@ -44,8 +46,10 @@ export function SignupPage() {
             } else {
                 alert(data.error || "Erro ao cadastrar atleta.")
             }
+            setIsDisabled(false)
         } catch (error) {
             console.error(error)
+            setIsDisabled(false)
             alert("Falha ao conectar com o servidor.")
         }
     }
@@ -68,7 +72,7 @@ export function SignupPage() {
                 "
             >
                 <h1 className="text-white text-4xl font-bold mb-6 p-4">
-                    Signup Page
+                    Bagres Swim Team
                 </h1>
                 <div className="w-full px-10 flex flex-col gap-4">
                     <Input
@@ -121,7 +125,10 @@ export function SignupPage() {
                             />
                         </div>
                     </div>
-                    <Button title="Entrar" />
+                    <Button 
+                    disabled={isDisabled}
+                    title={isDisabled ? "Cadastrando..." : "Cadastrar"} 
+                    />
                 </div>
                 <a className="text-white p-4"
                     href="/">

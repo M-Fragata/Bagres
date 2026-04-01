@@ -10,9 +10,11 @@ export function LoginPage() {
 
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
+    const [isDisabled, setIsDisabled] = useState(false)
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault()
+        setIsDisabled(true)
 
         try {
             const response = await fetch(RoutesURL.API_LOGIN, {
@@ -45,8 +47,10 @@ export function LoginPage() {
             } else {
                 alert(data.error || "E-mail ou senha incorretos.");
             }
+            setIsDisabled(false)
         } catch (error) {
             console.error(error)
+            setIsDisabled(false)
             alert("Falha ao conectar com o servidor.")
         }
     }
@@ -69,7 +73,7 @@ export function LoginPage() {
                 "
             >
                 <h1 className="text-white text-4xl font-bold mb-10 p-4">
-                    Login Page
+                    Bagres Swim Team
                 </h1>
                 <div className="w-full px-10 flex flex-col gap-4">
                     <Input
@@ -89,7 +93,8 @@ export function LoginPage() {
                         onChange={(event) => setPassword(event.target.value)}
                     />
                     <Button
-                        title="Entrar"
+                        disabled={isDisabled}
+                        title={isDisabled ? "Entrando..." : "Entrar"}
                     />
                 </div>
                 <a className="text-white p-4"
