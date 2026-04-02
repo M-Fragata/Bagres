@@ -279,7 +279,7 @@ export function PainelAdmin() {
                             </span>
                         </div>
 
-                        <div className="bg-bagre-primaria rounded-2xl shadow-xl overflow-hidden">
+                        <div className="bg-bagre-primaria rounded-2xl shadow-xl overflow-hidden mb-4">
                             <div className="bg-bagre-primaria rounded-2xl shadow-xl overflow-hidden">
                                 <table className="w-full text-left border-collapse">
                                     <thead className="bg-bagre-secundaria ">
@@ -364,7 +364,7 @@ export function PainelAdmin() {
                 )}
 
                 {ativo === "horarios" && (
-                    <section className="animate-in fade-in duration-300 w-full flex flex-col items-center">
+                    <section className="animate-in fade-in duration-300 w-full flex flex-col items-center mb-4">
                         <div className="bg-bagre-primaria p-6 rounded-2xl w-full max-w-4xl">
                             <h2 className="text-xl mb-4 text-bagre-terciaria text-center font-bold">
                                 Configuração dos Agendamentos
