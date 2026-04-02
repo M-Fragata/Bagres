@@ -232,7 +232,7 @@ export function SearchSchedule() {
     const horasAtuais = configHours[diaNome] || []
 
     return (
-        <main className="bg-bagre-terciaria w-full flex flex-col items-center justify-center p-3 gap-10">
+        <main className="bg-bagre-terciaria w-full flex flex-col items-center justify-center p-3 gap-10 mb-4">
             <div className="flex w-full max-w-200 p-2 border border-bagre-terciaria rounded-lg shadow-2xl">
                 <div className="flex w-full ">
                     <div className="flex-2">
