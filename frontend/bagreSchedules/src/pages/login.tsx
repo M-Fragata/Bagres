@@ -4,7 +4,8 @@ import { Input } from "../components/Input"
 import { Button } from "../components/Button"
 import { RoutesURL, token } from "../utils/routesURL"
 
-
+import padlog from "../assets/padlock.png"
+import person from "../assets/person.png"
 
 export function LoginPage() {
 
@@ -56,12 +57,35 @@ export function LoginPage() {
     }
 
     return (
-        <main className="min-h-screen w-full flex items-center justify-center bg-blue-950 p-2">
+        <main className="min-h-screen w-full flex items-center justify-center bg-bagre-primaria p-2">
+            <aside
+                className="bg-[url('/src/assets/priscila.jpeg')] bg-cover bg-center bg-no-repeat
+            rounded-l-3xl border border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)]
+                                    /* Responsividade Inteligente */
+                    w-full 
+                    max-w-[700px] 
+                    
+                    /* Em vez de h-full, usamos min-h para garantir espaço sem achatar */
+                    min-h-[600px] 
+                    md:min-h-[700px]
+
+                    hidden md:block
+            ">
+
+            </aside>
             <form onSubmit={handleSubmit}
                 className="
-                    bg-[url('/src/assets/hero.jpeg')] bg-cover bg-center bg-no-repeat
-                    flex flex-col items-center justify-center
-                    rounded-3xl border border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)]
+
+                    /* Mobile */
+                    bg-[url('/src/assets/hero.jpeg')] bg-cover bg-center 
+                rounded-3xl
+
+                    /* Desktop */
+                    md:bg-none md:bg-bagre-terciaria 
+                    md:rounded-l-none md:rounded-r-3xl
+
+                    flex flex-col items-center justify-around
+                    border border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)]
 
                     /* Responsividade Inteligente */
                     w-full 
@@ -70,37 +94,50 @@ export function LoginPage() {
                     /* Em vez de h-full, usamos min-h para garantir espaço sem achatar */
                     min-h-[600px] 
                     md:min-h-[700px]
+
                 "
             >
-                <h1 className="text-white text-4xl font-bold mb-10 p-4">
+
+                <h1 className="text-bagre-terciaria md:text-bagre-primaria text-4xl font-bold mb-10 p-4">
                     Bagres Swim Team
                 </h1>
-                <div className="w-full px-10 flex flex-col gap-4">
+
+                <div className="w-full px-10 flex flex-col gap-10">
+
                     <Input
-                        legendClassName="text-white"
-                        inputClassName="text-white"
+                        legendClassName="text-bagre-terciaria border-bagre-terciaria md:text-bagre-primaria md:border-bagre-primaria"
+                        inputClassName="text-bagre-terciaria border-bagre-terciaria md:text-bagre-primaria md:border-bagre-primaria"
+                        placeholder="E-mail"
                         required
                         legend="E-mail:"
                         type="email"
+                        logo={person}
                         onChange={(event) => setMail(event.target.value)}
                     />
+
                     <Input
-                        legendClassName="text-white"
-                        inputClassName="text-white"
+                        legendClassName="text-bagre-terciaria border-bagre-terciaria md:text-bagre-primaria md:border-bagre-primaria"
+                        inputClassName="text-bagre-terciaria border-bagre-terciaria md:text-bagre-primaria md:border-bagre-primaria"
+                        placeholder="Senha"
                         required
                         legend="Senha:"
                         type="password"
+                        logo={padlog}
                         onChange={(event) => setPassword(event.target.value)}
                     />
+
+                </div>
+                <div className="flex flex-col w-full px-10">
+
                     <Button
                         disabled={isDisabled}
                         title={isDisabled ? "Entrando..." : "Entrar"}
                     />
+                    <a className="text-bagre-terciaria md:text-bagre-primaria p-4 m-auto"
+                        href="/signup">
+                        <strong>Não possui conta?</strong>
+                    </a>
                 </div>
-                <a className="text-white p-4"
-                    href="/signup">
-                    <strong>Não possui conta?</strong>
-                </a>
             </form>
         </main>
     )
