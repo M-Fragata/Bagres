@@ -255,6 +255,7 @@ export function Schedule() {
                 </div>
 
                 <Input
+                    inputClassName="border-bagre-terciaria"
                     legend="Informe a data:"
                     type="date"
                     value={date}
@@ -309,6 +310,7 @@ export function Schedule() {
                     )
                 }
                 <Input
+                    inputClassName="border-bagre-terciaria"
                     disabled
                     required
                     value={name}
@@ -324,20 +326,20 @@ export function Schedule() {
             <section className="bg-bagre-primaria rounded-2xl p-12 min-[1100px]:h-[730px] flex flex-col h-full">
                 <aside className="flex items-center gap-4 mb-4 ">
                     <div>
-                        <img className="w-10 h-12"
+                        <img className="w-18 h-12 md:w-16 md:h-20"
                             src={logo}
                             alt="icone dos bagres" />
                     </div>
-                    <div className="text-white">
-                        <h2 className="text-bagre-secundaria">Agendamentos</h2>
-                        <p>Vizualize os agendamentos de acordo com a data selecionada</p>
+                    <div className="text-white h-full align-top">
+                        <h2 className="text-bagre-secundaria text-sm md:text-2xl">Agendamentos</h2>
+                        <p className="text-xs md:text-xl">Vizualize os agendamentos de acordo com a data selecionada</p>
                     </div>
                 </aside>
                 <aside className="flex flex-1 flex-col gap-2 mt-4 w-full min-[1100px]:mt-0">
                     < SchedulePeriod
                         icon={morning}
                         title="Manhã"
-                        period="08 - 11h"
+                        period="06 - 11h"
                         selectedDate={date}
                         schedules={schedule}
                     />
