@@ -28,7 +28,7 @@ export function SchedulePeriod({ icon, title, period, selectedDate, schedules }:
                 const hourNumber = Number(schedule.hour.replace(":", ""))
 
                 if (schedule.date === selectedDate) {
-                    if (period === "08 - 11h" && hourNumber >= 800 && hourNumber <= 1100) {
+                    if (period === "06 - 11h" && hourNumber >= 600 && hourNumber <= 1100) {
                         return (
                             <div key={schedule.id} className="flex justify-between pl-3 pr-3">
                                 <div>
