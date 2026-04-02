@@ -2,7 +2,7 @@
 
 @theme {
 /* Breakpoints personalizados */
-  --breakpoint-md: 620px;
+  --breakpoint-md: 720px;
   --breakpoint-mobile: 480px;
 
   /* Cores personalizadas (use o prefixo --color-) */
