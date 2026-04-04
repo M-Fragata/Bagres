@@ -23,22 +23,3 @@ html, body {
   overflow-x: hidden; /* Evita scroll horizontal */
   overflow-y: auto;   /* Garante o scroll vertical */
 }
-
-/* Esconde o ícone padrão no Chrome/Edge/Safari */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    background: transparent;
-    bottom: 0;
-    color: transparent;
-    cursor: pointer;
-    height: auto;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: auto;
-}
-
-/* Garante que o input tenha posição relativa para o ícone sumir mas o clique funcionar */
-input[type="date"] {
-    position: relative;
-}

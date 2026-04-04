@@ -11,7 +11,6 @@ import afternoon from "../assets/afternoon.png"
 import night from "../assets/night.png"
 import logo from "../assets/logo.png"
 import priscila from "../assets/priscila.jpeg"
-import calendar from "../assets/calendar.png"
 
 export type ScheduleProps = {
     id: string
@@ -260,7 +259,6 @@ export function Schedule() {
                     legend="Informe a data:"
                     type="date"
                     value={date}
-                    calendar={calendar}
                     onChange={(event) => setDate(event.target.value)}
                 />
                 {

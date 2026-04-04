@@ -105,9 +105,7 @@ export function LoginPage() {
 
             </aside>
             <form action={formAction}
-                className="
-                    
-                    
+                className="    
 
                     /* Desktop */
                     md:bg-none bg-bagre-terciaria 
