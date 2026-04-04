@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useActionState } from "react"
+import { z, ZodError } from 'zod'
 
 import { Input } from "../components/Input"
 import { Button } from "../components/Button"
@@ -7,17 +8,31 @@ import { RoutesURL, token } from "../utils/routesURL"
 import padlog from "../assets/padlock.png"
 import person from "../assets/person.png"
 
+const loginSchema = z.object({
+    email: z.email(),
+    password: z.string()
+})
+
 export function LoginPage() {
 
-    const [mail, setMail] = useState("")
-    const [password, setPassword] = useState("")
-    const [isDisabled, setIsDisabled] = useState(false)
+    const [state, formAction, isDisabled] = useActionState(handleSubmit, {
+        message: null,
+        payload: {
+            email: "",
+            password: ""
+        }
+    })
 
-    async function handleSubmit(event: React.FormEvent) {
-        event.preventDefault()
-        setIsDisabled(true)
+    async function handleSubmit( _: any, formData: FormData ) {
 
+        const payload = {
+            email: formData.get("email") as string,
+            password: formData.get("password") as string                
+        }
+        
         try {
+            const login = loginSchema.parse(payload)
+
             const response = await fetch(RoutesURL.API_LOGIN, {
                 method: "POST",
                 headers: {
@@ -25,14 +40,15 @@ export function LoginPage() {
                     "authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    email: mail,
-                    password: password
+                    email: login.email,
+                    password: login.password
                 })
             })
 
             const data = await response.json()
 
             if (response.ok) {
+
                 localStorage.setItem("@bagres:token", data.token);
 
                 // Salve o objeto inteiro do atleta (que tem a role: "user")
@@ -45,14 +61,19 @@ export function LoginPage() {
 
                 // Use o reload para forçar o App.tsx a ler o localStorage de novo
                 window.location.href = "/";
+
+                return {message: null, payload: null}
             } else {
-                alert(data.error || "E-mail ou senha incorretos.");
+                return { message: data.error || "E-mail ou senha incorretos.", payload };
             }
-            setIsDisabled(false)
+
         } catch (error) {
-            console.error(error)
-            setIsDisabled(false)
-            alert("Falha ao conectar com o servidor.")
+
+            if (error instanceof ZodError) {
+                return { message: error.issues[0].message, payload }
+            }
+
+            return { message: "Erro ao entrar, tente novamente em alguns segundos.", payload };
         }
     }
 
@@ -73,7 +94,7 @@ export function LoginPage() {
             ">
 
             </aside>
-            <form onSubmit={handleSubmit}
+            <form action={formAction}
                 className="
 
                     /* Mobile */
@@ -112,7 +133,8 @@ export function LoginPage() {
                         legend="E-mail:"
                         type="email"
                         logo={person}
-                        onChange={(event) => setMail(event.target.value)}
+                        name="email"
+                        defaultValue={state.payload?.email}
                     />
 
                     <Input
@@ -123,10 +145,15 @@ export function LoginPage() {
                         legend="Senha:"
                         type="password"
                         logo={padlog}
-                        onChange={(event) => setPassword(event.target.value)}
+                        name="password"
+                        defaultValue={state.payload?.password}
                     />
 
+                    <p className="text-red-500 text-sm m-auto">{state?.message}</p>
+
                 </div>
+
+
                 <div className="flex flex-col w-full px-10">
 
                     <Button

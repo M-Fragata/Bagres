@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useActionState } from "react"
+import { z, ZodError } from 'zod'
 import { useNavigate } from "react-router-dom";
 import { RoutesURL } from "../utils/routesURL"
 
@@ -9,23 +10,48 @@ import padlog from "../assets/padlock.png"
 import person from "../assets/person.png"
 import mailIcon from "../assets/mail.png"
 
+const signupSchema = z.object({
+    email: z.email(),
+    firstName: z.string().trim().min(3, "O nome deve ter no mínimo 3 caracteres"),
+    lastName: z.string().trim().min(3, "O sobrenome deve ter no mínimo 3 caracteres"),
+    password: z.string().trim().min(6, "A Senha deve conter ao menos 6 caracteres"),
+    confirmPassword: z.string().trim().min(6)
+})
+
 export function SignupPage() {
 
-    const [mail, setMail] = useState("")
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-    const [isDisabled, setIsDisabled] = useState(false)
+
+    const [state, formAction, isDisabled] = useActionState(handleSubmit, {
+        message: null,
+        payload: {
+            email: "",
+            firstName: "",
+            lastName: "",
+            password: "",
+            confirmPassword: ""
+        }
+    })
 
     const navigate = useNavigate();
 
-    async function handleSubmit(event: React.FormEvent) {
-        setIsDisabled(true)
-
-        event.preventDefault()
+    async function handleSubmit( _: any, formData: FormData ) {
+        
+        const payload = {
+            email: formData.get("email") as string,
+            firstName: formData.get("firstName") as string,
+            lastName: formData.get("lastName") as string,
+            password: formData.get("password") as string,
+            confirmPassword: formData.get("confirmPassword") as string
+        }
 
         try {
+
+            const signup = signupSchema.parse(payload)
+
+            if (signup.password !== signup.confirmPassword) {
+                return { message: "Senhas diferentes", payload }
+            }
+
 
             const response = await fetch(RoutesURL.API_SESSION, {
                 method: "POST",
@@ -33,11 +59,11 @@ export function SignupPage() {
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify({
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: mail,
-                    password: password,
-                    confirmPassword: confirmPassword
+                    firstName: signup.firstName,
+                    lastName: signup.lastName,
+                    email: signup.email,
+                    password: signup.password,
+                    confirmPassword: signup.confirmPassword
                 })
             })
 
@@ -46,14 +72,18 @@ export function SignupPage() {
             if (response.ok) {
                 alert("Cadastro realizado com sucesso!")
                 navigate("/")
+                return {message: null, payload: null}
             } else {
-                alert(data.error || "Erro ao cadastrar atleta.")
+                return {message: data.error || "Erro ao cadastrar, tente novamente em alguns segundos!", payload}
             }
-            setIsDisabled(false)
+
         } catch (error) {
-            console.error(error)
-            setIsDisabled(false)
-            alert("Falha ao conectar com o servidor.")
+
+            if (error instanceof ZodError) {
+                return { message: error.issues[0].message, payload }
+            }
+
+            return {message: "Erro ao cadastrar, tente novamente em alguns segundos!", payload}
         }
     }
 
@@ -72,7 +102,7 @@ export function SignupPage() {
                     hidden md:block
             ">
             </aside>
-            <form onSubmit={handleSubmit}
+            <form action={formAction}
                 className="
 
                 /* Mobile */
@@ -107,7 +137,8 @@ export function SignupPage() {
                         placeholder="E-mail"
                         legend="E-mail:"
                         type="email"
-                        onChange={(event) => setMail(event.target.value)}
+                        name="email"
+                        defaultValue={state.payload?.email}
                     />
                     <div className="flex gap-1 w-full">
                         <div className="flex-1">
@@ -118,7 +149,8 @@ export function SignupPage() {
                                 logo={person}
                                 required
                                 legend="Nome:"
-                                onChange={(event) => setFirstName(event.target.value)}
+                                name="firstName"
+                                defaultValue={state.payload?.firstName}
                             />
                         </div>
                         <div className="flex-1">
@@ -129,7 +161,9 @@ export function SignupPage() {
                                 logo={person}
                                 required
                                 legend="Sobrenome:"
-                                onChange={(event) => setLastName(event.target.value)} />
+                                name="lastName"
+                                defaultValue={state.payload?.lastName}
+                            />
                         </div>
                     </div>
                     <div className="flex gap-1 w-full">
@@ -142,7 +176,8 @@ export function SignupPage() {
                                 logo={padlog}
                                 legend="Senha:"
                                 type="password"
-                                onChange={(event) => setPassword(event.target.value)}
+                                name="password"
+                                defaultValue={state.payload?.password}
                             />
                         </div>
                         <div
@@ -155,12 +190,16 @@ export function SignupPage() {
                                 logo={padlog}
                                 legend="Confirmar Senha:"
                                 type="password"
-                                onChange={(event) => setConfirmPassword(event.target.value)}
+                                name="confirmPassword"
+                                defaultValue={state.payload?.confirmPassword}
                             />
                         </div>
                     </div>
 
+                    <p className="text-red-500 text-sm m-auto">{state?.message}</p>
+
                 </div>
+                
                 <div className="flex flex-col w-full px-10">
                     <Button
                         disabled={isDisabled}
