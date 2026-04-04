@@ -90,7 +90,7 @@ export function SignupPage() {
     return (
         <main className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center bg-gradient-to-l from-[#2F5675] to-[#040B11] md:p-8 p-4">
             <aside className="
-                md:bg-[url('/src/assets/banano.jpg')] bg-[url('/src/assets/hero.jpeg')]
+                md:bg-[url('/src/assets/banano.JPG')] bg-[url('/src/assets/hero.jpeg')]
                 
                 bg-cover bg-right bg-no-repeat 
 
