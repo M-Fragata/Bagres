@@ -1,11 +1,21 @@
 import { type Request, type Response } from 'express';
 import { prisma } from '../database/prisma.js'; // ajuste o caminho conforme seu projeto
 import bcrypt from 'bcryptjs';
+import { z } from 'zod'
 
 export class AtletaController {
   async create(req: Request, res: Response) {
+
+    const bodySchema = z.object({
+      email: z.email(),
+      firstName: z.string().trim().min(3, "O nome deve ter no mínimo 3 caracteres"),
+      lastName: z.string().trim().min(3, "O sobrenome deve ter no mínimo 3 caracteres"),
+      password: z.string().trim().min(6, "A Senha deve conter ao menos 6 caracteres"),
+      confirmPassword: z.string().trim().min(6)
+    })
+
     try {
-      const { firstName, lastName, email, password, confirmPassword } = req.body;
+      const { firstName, lastName, email, password, confirmPassword } = bodySchema.parse(req.body);
 
       // 1. Verificar se o e-mail já existe
       const userExists = await prisma.atletas.findUnique({ where: { email } });
