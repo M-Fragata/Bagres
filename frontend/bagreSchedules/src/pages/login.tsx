@@ -82,7 +82,7 @@ export function LoginPage() {
             <aside
                 className="
                 
-                md:bg-[url('/src/assets/priscila.jpeg')] bg-[url('/src/assets/hero.jpeg')]
+                md:bg-[url('/src/assets/banano.JPG')] bg-[url('/src/assets/hero.jpeg')]
                 
                 bg-cover bg-right bg-no-repeat 
 
