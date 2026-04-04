@@ -23,13 +23,13 @@ export function LoginPage() {
         }
     })
 
-    async function handleSubmit( _: any, formData: FormData ) {
+    async function handleSubmit(_: any, formData: FormData) {
 
         const payload = {
             email: formData.get("email") as string,
-            password: formData.get("password") as string                
+            password: formData.get("password") as string
         }
-        
+
         try {
             const login = loginSchema.parse(payload)
 
@@ -62,7 +62,7 @@ export function LoginPage() {
                 // Use o reload para forçar o App.tsx a ler o localStorage de novo
                 window.location.href = "/";
 
-                return {message: null, payload: null}
+                return { message: null, payload: null }
             } else {
                 return { message: data.error || "E-mail ou senha incorretos.", payload };
             }
@@ -78,34 +78,44 @@ export function LoginPage() {
     }
 
     return (
-        <main className="min-h-screen w-full flex items-center justify-center bg-bagre-primaria p-2">
+        <main className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center bg-gradient-to-l from-[#2F5675] to-[#040B11] md:p-8 p-4">
             <aside
-                className="bg-[url('/src/assets/priscila.jpeg')] bg-cover bg-center bg-no-repeat
-            rounded-l-3xl border border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)]
-                                    /* Responsividade Inteligente */
+                className="
+                
+                md:bg-[url('/src/assets/banano.jpg')] bg-[url('/src/assets/hero.jpeg')]
+                
+                bg-cover bg-right bg-no-repeat 
+
+                md:rounded-l-3xl md:rounded-t-none rounded-t-3xl
+
+                border border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)]
+                    
+                    
+                    /* Responsividade Inteligente */
                     w-full 
+                    md:max-w-[500px]
                     max-w-[700px] 
                     
                     /* Em vez de h-full, usamos min-h para garantir espaço sem achatar */
-                    min-h-[600px] 
+                    min-h-[200px] 
                     md:min-h-[700px]
 
-                    hidden md:block
+                    
             ">
 
             </aside>
             <form action={formAction}
                 className="
-
-                    /* Mobile */
-                    bg-[url('/src/assets/hero.jpeg')] bg-cover bg-center 
-                rounded-3xl
+                    
+                    
 
                     /* Desktop */
-                    md:bg-none md:bg-bagre-terciaria 
+                    md:bg-none bg-bagre-terciaria 
                     md:rounded-l-none md:rounded-r-3xl
 
-                    flex flex-col items-center justify-around
+                    rounded-b-3xl
+
+                    flex flex-col items-center md:justify-around justify-center
                     border border-white shadow-[0px_0px_10px_rgba(255,255,255,0.5)]
 
                     /* Responsividade Inteligente */
@@ -113,54 +123,54 @@ export function LoginPage() {
                     max-w-[700px] 
                     
                     /* Em vez de h-full, usamos min-h para garantir espaço sem achatar */
-                    min-h-[600px] 
+                    min-h-[400px] 
                     md:min-h-[700px]
 
                 "
             >
 
-                <h1 className="text-bagre-terciaria md:text-bagre-primaria text-4xl font-bold mb-10 p-4">
+                <h1 className="text-bagre-primaria text-3xl md:text-4xl font-bold md:mb-10">
                     Bagres Swim Team
                 </h1>
 
-                <div className="w-full px-10 flex flex-col gap-10">
+                <div className="w-full md:px-10 px-5 flex flex-col gap-10 pt-15 pb-5 md:pt-0 md:pb-0">
 
-                    <Input
-                        legendClassName="text-bagre-terciaria border-bagre-terciaria md:text-bagre-primaria md:border-bagre-primaria"
-                        inputClassName="text-bagre-terciaria border-bagre-terciaria md:text-bagre-primaria md:border-bagre-primaria"
-                        placeholder="E-mail"
-                        required
-                        legend="E-mail:"
-                        type="email"
-                        logo={person}
-                        name="email"
-                        defaultValue={state.payload?.email}
-                    />
+                        <Input
+                            legendClassName="text-bagre-primaria border-bagre-primaria"
+                            inputClassName="text-bagre-primaria border-bagre-primaria"
+                            placeholder="E-mail"
+                            required
+                            legend="E-mail:"
+                            type="email"
+                            logo={person}
+                            name="email"
+                            defaultValue={state.payload?.email}
+                        />
 
-                    <Input
-                        legendClassName="text-bagre-terciaria border-bagre-terciaria md:text-bagre-primaria md:border-bagre-primaria"
-                        inputClassName="text-bagre-terciaria border-bagre-terciaria md:text-bagre-primaria md:border-bagre-primaria"
-                        placeholder="Senha"
-                        required
-                        legend="Senha:"
-                        type="password"
-                        logo={padlog}
-                        name="password"
-                        defaultValue={state.payload?.password}
-                    />
+                        <Input
+                            legendClassName="text-bagre-primaria border-bagre-primaria"
+                            inputClassName="text-bagre-primaria border-bagre-primaria"
+                            placeholder="Senha"
+                            required
+                            legend="Senha:"
+                            type="password"
+                            logo={padlog}
+                            name="password"
+                            defaultValue={state.payload?.password}
+                        />
 
-                    <p className="text-red-500 text-sm m-auto">{state?.message}</p>
+                <p className="text-red-500 text-sm m-auto">{state?.message}</p>
 
                 </div>
 
 
-                <div className="flex flex-col w-full px-10">
+                <div className="flex flex-col w-full md:px-10 px-6">
 
                     <Button
                         disabled={isDisabled}
                         title={isDisabled ? "Entrando..." : "Entrar"}
                     />
-                    <a className="text-bagre-terciaria md:text-bagre-primaria p-4 m-auto"
+                    <a className="text-bagre-primaria p-4 m-auto"
                         href="/signup">
                         <strong>Não possui conta?</strong>
                     </a>
