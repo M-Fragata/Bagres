@@ -2,12 +2,18 @@ import { type Request, type Response } from 'express';
 import { prisma } from '../database/prisma.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { z, ZodError } from "zod"
+
+const bodySchema = z.object({
+  email: z.email(),
+  password: z.string()
+})
 
 export class LoginController {
 
   async create(req: Request, res: Response) {
     try {
-      const { email, password } = req.body;
+      const { email, password } = bodySchema.parse(req.body);
 
       // 1. Buscar o atleta pelo email
       const atleta = await prisma.atletas.findUnique({
@@ -44,6 +50,7 @@ export class LoginController {
       });
 
     } catch (error) {
+
       return res.status(500).json({ error: "Erro ao realizar login." });
     }
   }
