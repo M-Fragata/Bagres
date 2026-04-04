@@ -88,7 +88,12 @@ export function SignupPage() {
     }
 
     return (
-        <main className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center bg-gradient-to-l from-[#2F5675] to-[#040B11] md:p-8 p-4">
+        <main className="min-h-screen w-full flex flex-col md:flex-row items-center justify-center md:p-8 p-4
+         
+        md:bg-gradient-to-l from-[#2F5675] to-[#040B11]
+        bg-gradient-to-t
+        
+        ">
             <aside className="
                 md:bg-[url('/src/assets/banano.JPG')] bg-[url('/src/assets/hero.jpeg')]
                 
