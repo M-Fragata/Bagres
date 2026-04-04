@@ -2,10 +2,15 @@ import {} from 'express';
 import { prisma } from '../database/prisma.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { z, ZodError } from "zod";
+const bodySchema = z.object({
+    email: z.email(),
+    password: z.string()
+});
 export class LoginController {
     async create(req, res) {
         try {
-            const { email, password } = req.body;
+            const { email, password } = bodySchema.parse(req.body);
             // 1. Buscar o atleta pelo email
             const atleta = await prisma.atletas.findUnique({
                 where: { email },
