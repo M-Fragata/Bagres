@@ -6,6 +6,7 @@ import { ScheduleHours } from "../components/ScheduleHours"
 
 import cancel from "../assets/trash.png"
 import edit from "../assets/edit.png"
+import calendar from "../assets/calendar.png"
 
 const user = JSON.parse(localStorage.getItem("@bagres:user") || "{}")
 
@@ -248,6 +249,7 @@ export function SearchSchedule() {
                         <Input
                             inputClassName="text-[11px] mobile:text-sm"
                             type="date"
+                            calendar={calendar}
                             onChange={(event) => setDate(event.target.value)} />
                     </div>
                 </div>
