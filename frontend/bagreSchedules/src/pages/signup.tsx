@@ -215,7 +215,7 @@ export function SignupPage() {
                         disabled={isDisabled}
                         title={isDisabled ? "Cadastrando..." : "Cadastrar"}
                     />
-                    <a className="text-bagre-primaria p-4 m-auto"
+                    <a className="text-bagre-primaria p-4 m-auto text-sm md:text-base"
                         href="/">
                         <strong>Já possui conta?</strong>
                     </a>

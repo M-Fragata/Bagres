@@ -168,7 +168,7 @@ export function LoginPage() {
                         disabled={isDisabled}
                         title={isDisabled ? "Entrando..." : "Entrar"}
                     />
-                    <div className="flex justify-content">
+                    <div className="flex justify-content text-sm md:text-base">
                         <a className="text-bagre-primaria p-4 m-auto"
                             href="/signup">
                             <strong>Não possui conta?</strong>
