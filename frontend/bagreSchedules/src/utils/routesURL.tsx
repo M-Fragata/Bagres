@@ -4,6 +4,7 @@ type RoutesURLProps = {
     API_SESSION: string;
     API_ATLETAS: string;
     API_CONFIG: string;
+    API_FORGOT_PASSWORD: string;
 }
 
 // O Vite vai tentar ler a variável do arquivo .env. 
@@ -16,6 +17,7 @@ export const RoutesURL: RoutesURLProps = {
     "API_SESSION": `${BASE_URL}/session`,
     "API_ATLETAS": `${BASE_URL}/atletas`,
     "API_CONFIG": `${BASE_URL}/config`,
+    "API_FORGOT_PASSWORD": `${BASE_URL}/forgot-password`
 }
 
 export const token = localStorage.getItem("@bagres:token");

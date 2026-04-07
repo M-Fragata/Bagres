@@ -133,31 +133,31 @@ export function LoginPage() {
 
                 <div className="w-full md:px-10 px-5 flex flex-col gap-10 pt-15 pb-5 md:pt-0 md:pb-0">
 
-                        <Input
-                            legendClassName="text-bagre-primaria border-bagre-primaria"
-                            inputClassName="text-bagre-primaria border-bagre-primaria"
-                            placeholder="E-mail"
-                            required
-                            legend="E-mail:"
-                            type="email"
-                            logo={person}
-                            name="email"
-                            defaultValue={state.payload?.email}
-                        />
+                    <Input
+                        legendClassName="text-bagre-primaria border-bagre-primaria"
+                        inputClassName="text-bagre-primaria border-bagre-primaria"
+                        placeholder="E-mail"
+                        required
+                        legend="E-mail:"
+                        type="email"
+                        logo={person}
+                        name="email"
+                        defaultValue={state.payload?.email}
+                    />
 
-                        <Input
-                            legendClassName="text-bagre-primaria border-bagre-primaria"
-                            inputClassName="text-bagre-primaria border-bagre-primaria"
-                            placeholder="Senha"
-                            required
-                            legend="Senha:"
-                            type="password"
-                            logo={padlog}
-                            name="password"
-                            defaultValue={state.payload?.password}
-                        />
+                    <Input
+                        legendClassName="text-bagre-primaria border-bagre-primaria"
+                        inputClassName="text-bagre-primaria border-bagre-primaria"
+                        placeholder="Senha"
+                        required
+                        legend="Senha:"
+                        type="password"
+                        logo={padlog}
+                        name="password"
+                        defaultValue={state.payload?.password}
+                    />
 
-                <p className="text-red-500 text-sm m-auto">{state?.message}</p>
+                    <p className="text-red-500 text-sm m-auto">{state?.message}</p>
 
                 </div>
 
@@ -168,10 +168,18 @@ export function LoginPage() {
                         disabled={isDisabled}
                         title={isDisabled ? "Entrando..." : "Entrar"}
                     />
-                    <a className="text-bagre-primaria p-4 m-auto"
-                        href="/signup">
-                        <strong>Não possui conta?</strong>
-                    </a>
+                    <div className="flex justify-content">
+                        <a className="text-bagre-primaria p-4 m-auto"
+                            href="/signup">
+                            <strong>Não possui conta?</strong>
+                        </a>
+                        <a
+                            className="text-bagre-primaria p-4 m-auto"
+                            href="/forgotPassword"
+                        >
+                            <strong>Esqueceu senha?</strong>
+                        </a>
+                    </div>
                 </div>
             </form>
         </main>
